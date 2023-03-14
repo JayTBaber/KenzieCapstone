@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/players")
@@ -27,9 +28,9 @@ public class PlayerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Player> getPlayerById(@PathVariable int id) {
-        Player player = playerService.getPlayerById(id);
-        if (player == null) {
+    public ResponseEntity<Optional<Player>> getPlayerById(@PathVariable int id) {
+        Optional<Player> player = playerService.getPlayerById(id);
+        if (player.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(player, HttpStatus.OK);

@@ -8,6 +8,8 @@ public class Score {
 
     private int scoreValue;
 
+    private Card card;
+
     public Score() {}
 
     public Score(long playerId, int scoreValue) {
@@ -38,4 +40,12 @@ public class Score {
     public void setScoreValue(int scoreValue) {
         this.scoreValue = scoreValue;
     }
+
+    public Card getCard() {
+        return card;
+    }
+    public void setCard(Card card) {
+        this.card = card;
+    }
+
 }

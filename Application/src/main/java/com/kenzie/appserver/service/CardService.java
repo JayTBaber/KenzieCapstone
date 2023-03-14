@@ -11,7 +11,6 @@ import java.util.Optional;
 @Service
 public class CardService {
 
-    @Autowired
     private CardDAO cardDAO;
 
     public List<Card> getAllCards() {
@@ -19,7 +18,7 @@ public class CardService {
     }
 
     public Card getCardById(long id) throws EntityNotFoundException {
-        Optional<Card> optionalCard = cardDAO.findById(id);
+        Optional<Card> optionalCard = Optional.ofNullable(cardDAO.findById(id));
         if (optionalCard.isPresent()) {
             return optionalCard.get();
         } else {
