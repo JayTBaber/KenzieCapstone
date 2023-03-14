@@ -2,11 +2,13 @@ package com.kenzie.appserver.controller;
 
 import com.kenzie.appserver.service.GameService;
 import com.kenzie.appserver.service.model.Game;
+import com.kenzie.appserver.service.model.Player;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/games")
@@ -24,9 +26,9 @@ public class GameController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Game> getGameById(@PathVariable int id) {
-        Game game = gameService.getGameById(id);
-        if (game == null) {
+    public ResponseEntity<Optional<Game>> getGameById(@PathVariable int id) {
+        Optional<Game> game = gameService.getGameById(id);
+        if (game.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(game, HttpStatus.OK);
@@ -34,7 +36,7 @@ public class GameController {
     }
 
     @PostMapping
-    public ResponseEntity<Game> createGame(@RequestBody List<String> playerNames) {
+    public ResponseEntity<Game> createGame(@RequestBody List<Player> playerNames) {
         Game game = gameService.createGame(playerNames);
         return new ResponseEntity<>(game, HttpStatus.CREATED);
     }

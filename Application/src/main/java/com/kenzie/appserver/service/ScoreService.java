@@ -15,7 +15,7 @@ public class ScoreService {
     private ScoreRepository scoreRepository;
 
     public List<Score> getAllScores() {
-        return scoreRepository.findAll();
+        return (List<Score>) scoreRepository.findAll();
     }
 
     public Optional<Score> getScoreById(long id) {
@@ -28,5 +28,24 @@ public class ScoreService {
 
     public void deleteScore(Score score) {
         scoreRepository.delete(score);
+    }
+
+    public void addScore(Score score) {
+        scoreRepository.save(score);
+    }
+
+    public void updateScoreById(long id, Score score) {
+        Optional<Score> scoreOptional = scoreRepository.findById(id);
+        if (scoreOptional.isPresent()) {
+            Score scoreToUpdate = scoreOptional.get();
+            scoreToUpdate.setScoreValue(score.getScoreValue());
+            scoreToUpdate.setPlayerId(score.getPlayerId());
+            scoreToUpdate.setCard(score.getCard());
+            scoreRepository.save(scoreToUpdate);
+        }
+    }
+
+    public void deleteScoreById(long id) {
+        scoreRepository.deleteById(id);
     }
 }

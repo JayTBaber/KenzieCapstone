@@ -15,7 +15,7 @@ public class PlayerService {
     private PlayerRepository playerRepository;
 
     public List<Player> getAllPlayers() {
-        return playerRepository.findAll();
+        return (List<Player>) playerRepository.findAll();
     }
 
     public Optional<Player> getPlayerById(long id) {
