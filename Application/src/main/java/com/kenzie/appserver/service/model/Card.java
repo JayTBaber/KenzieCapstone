@@ -25,6 +25,10 @@ public class Card {
         return rank;
     }
 
+    public long getId() {
+        return rank.ordinal();
+    }
+
     @Override
     public String toString() {
         return rank + " of " + suit;

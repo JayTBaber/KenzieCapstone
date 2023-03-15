@@ -28,4 +28,26 @@ public class CardDAO {
     public Card drawCard() {
         return cards.remove(0);
     }
+
+    public List<Card> findAll() {
+        return cards;
+    }
+
+    public Card save(Card card) {
+        cards.add(card);
+        return card;
+    }
+
+    public void delete(Card card) {
+        cards.remove(card);
+    }
+
+    public Card findById(long id) {
+        for (Card card : cards) {
+            if (card.getId() == id) {
+                return card;
+            }
+        }
+        return null;
+    }
 }

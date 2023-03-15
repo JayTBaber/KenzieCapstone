@@ -2,6 +2,7 @@ package com.kenzie.appserver.service;
 
 import com.kenzie.appserver.repositories.GameRepository;
 import com.kenzie.appserver.service.model.Game;
+import com.kenzie.appserver.service.model.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class GameService {
     private GameRepository gameRepository;
 
     public List<Game> getAllGames() {
-        return gameRepository.findAll();
+        return (List<Game>) gameRepository.findAll();
     }
 
     public Optional<Game> getGameById(long id) {
@@ -28,5 +29,11 @@ public class GameService {
 
     public void deleteGame(Game game) {
         gameRepository.delete(game);
+    }
+
+    public Game createGame(List<Player> playerNames) {
+        Game game = new Game(playerNames);
+        gameRepository.save(game);
+        return game;
     }
 }
