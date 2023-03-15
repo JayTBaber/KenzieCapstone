@@ -5,21 +5,26 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.kenzie.appserver.service.ScoreService;
 import com.kenzie.appserver.service.model.Score;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DynamoDBScoreRepository implements ScoreRepository {
 
     private final DynamoDBMapper mapper;
+
+    ScoreService scoreService = new ScoreService();
 
     public DynamoDBScoreRepository(DynamoDBMapper mapper) {
         this.mapper = mapper;
     }
 
     @Override
-    public void save(Score score) {
+    public Score save(Score score) {
         mapper.save(score);
+        return score;
     }
 
     @Override
@@ -38,8 +43,17 @@ public class DynamoDBScoreRepository implements ScoreRepository {
 
     @Override
     public void delete(String id) {
-        Score score = new Score();
-        score.setId(id);
+        Optional<Score> score = scoreService.getScoreById(Long.parseLong(id));
         mapper.delete(score);
+    }
+
+    @Override
+    public List<Score> findAll() {
+        return scoreService.getAllScores();
+    }
+
+    @Override
+    public void deleteById(long id) {
+
     }
 }

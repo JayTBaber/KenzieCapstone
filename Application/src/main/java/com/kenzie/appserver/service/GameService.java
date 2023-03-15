@@ -12,7 +12,6 @@ import java.util.Optional;
 @Service
 public class GameService {
 
-    @Autowired
     private GameRepository gameRepository;
 
     public List<Game> getAllGames() {
@@ -20,7 +19,7 @@ public class GameService {
     }
 
     public Optional<Game> getGameById(long id) {
-        return gameRepository.findById(id);
+        return Optional.ofNullable(gameRepository.findById(String.valueOf(id)));
     }
 
     public Game saveGame(Game game) {
@@ -28,7 +27,7 @@ public class GameService {
     }
 
     public void deleteGame(Game game) {
-        gameRepository.delete(game);
+        gameRepository.delete(game.toString());
     }
 
     public Game createGame(List<Player> playerNames) {
