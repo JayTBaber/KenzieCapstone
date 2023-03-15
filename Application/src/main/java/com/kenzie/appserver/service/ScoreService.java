@@ -11,7 +11,6 @@ import java.util.Optional;
 @Service
 public class ScoreService {
 
-    @Autowired
     private ScoreRepository scoreRepository;
 
     public List<Score> getAllScores() {
@@ -19,7 +18,7 @@ public class ScoreService {
     }
 
     public Optional<Score> getScoreById(long id) {
-        return scoreRepository.findById(id);
+        return Optional.ofNullable(scoreRepository.findById(String.valueOf(id)));
     }
 
     public Score saveScore(Score score) {
@@ -27,7 +26,7 @@ public class ScoreService {
     }
 
     public void deleteScore(Score score) {
-        scoreRepository.delete(score);
+        scoreRepository.delete(score.toString());
     }
 
     public void addScore(Score score) {
@@ -35,7 +34,7 @@ public class ScoreService {
     }
 
     public void updateScoreById(long id, Score score) {
-        Optional<Score> scoreOptional = scoreRepository.findById(id);
+        Optional<Score> scoreOptional = Optional.ofNullable(scoreRepository.findById(String.valueOf(id)));
         if (scoreOptional.isPresent()) {
             Score scoreToUpdate = scoreOptional.get();
             scoreToUpdate.setScoreValue(score.getScoreValue());

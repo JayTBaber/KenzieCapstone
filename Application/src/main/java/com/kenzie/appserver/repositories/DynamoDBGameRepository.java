@@ -5,21 +5,26 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.kenzie.appserver.service.GameService;
 import com.kenzie.appserver.service.model.Game;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DynamoDBGameRepository implements GameRepository {
 
     private final DynamoDBMapper mapper;
+
+    GameService gameService = new GameService();
 
     public DynamoDBGameRepository(DynamoDBMapper mapper) {
         this.mapper = mapper;
     }
 
     @Override
-    public void save(Game game) {
+    public Game save(Game game) {
         mapper.save(game);
+        return game;
     }
 
     @Override
@@ -38,8 +43,12 @@ public class DynamoDBGameRepository implements GameRepository {
 
     @Override
     public void delete(String id) {
-        Game game = new Game();
-        game.setId(id);
+        Optional<Game> game = gameService.getGameById(Long.parseLong(id));
         mapper.delete(game);
+    }
+
+    @Override
+    public List<Game> findAll() {
+        return gameService.getAllGames();
     }
 }

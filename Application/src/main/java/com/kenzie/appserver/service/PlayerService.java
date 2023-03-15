@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class PlayerService {
 
-    @Autowired
+
     private PlayerRepository playerRepository;
 
     public List<Player> getAllPlayers() {
@@ -19,7 +19,7 @@ public class PlayerService {
     }
 
     public Optional<Player> getPlayerById(long id) {
-        return playerRepository.findById(id);
+        return Optional.ofNullable(playerRepository.findById(String.valueOf(id)));
     }
 
     public Player savePlayer(Player player) {
@@ -27,6 +27,6 @@ public class PlayerService {
     }
 
     public void deletePlayer(Player player) {
-        playerRepository.delete(player);
+        playerRepository.delete(String.valueOf(player));
     }
 }
