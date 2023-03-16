@@ -16,6 +16,8 @@ public enum Rank {
     public int getAceValue(int currentTotal) {
         if (this == ACE) {
             return (currentTotal + 11 <= 21) ? 11 : 1;
+        } else if (currentTotal == ACE.value) {
+            return currentTotal + 1;
         } else {
             return getValue();
         }
