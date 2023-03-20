@@ -3,6 +3,7 @@ package com.kenzie.appserver.config;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -32,5 +33,10 @@ public class DynamoDbConfig {
     @Bean(name = "amazonDynamoDB")
     public AmazonDynamoDB defaultAmazonDynamoDb() {
         return AmazonDynamoDBClientBuilder.defaultClient();
+    }
+
+    @Bean
+    public DynamoDBMapper dynamoDBMapper(AmazonDynamoDB amazonDynamoDB) {
+        return new DynamoDBMapper(amazonDynamoDB);
     }
 }
