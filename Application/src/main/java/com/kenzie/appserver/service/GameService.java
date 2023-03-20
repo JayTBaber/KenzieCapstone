@@ -1,6 +1,7 @@
 package com.kenzie.appserver.service;
 
 import com.kenzie.appserver.repositories.GameRepository;
+import com.kenzie.appserver.service.model.Card;
 import com.kenzie.appserver.service.model.Game;
 import com.kenzie.appserver.service.model.Player;
 import org.springframework.beans.factory.annotation.Autowired;

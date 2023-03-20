@@ -8,6 +8,7 @@ import java.util.List;
 public class Dealer {
     private final String name;
     private final List<Card> hand;
+    private boolean isBusted;
 
     public Dealer() {
         this.name = "Dealer";
@@ -43,5 +44,13 @@ public class Dealer {
         }
 
         return totalPoints;
+    }
+
+    public void setBusted() {
+        this.isBusted = true;
+    }
+
+    public boolean isBusted() {
+        return this.isBusted;
     }
 }
