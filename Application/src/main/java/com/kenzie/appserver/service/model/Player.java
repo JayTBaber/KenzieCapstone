@@ -5,13 +5,21 @@ import com.kenzie.appserver.enums.Rank;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Player {
+public class Player {
     private final String name;
     private final List<Card> hand;
+    private int totalPoints;
+    private boolean standing;
+    private int balance;
+    private int betAmount;
 
-    public Player(String name) {
+    public Player(String name, int balance) {
         this.name = name;
         this.hand = new ArrayList<>();
+        this.totalPoints = 0;
+        this.standing = false;
+        this.balance = balance;
+        this.betAmount = 0;
     }
 
     public String getName() {
@@ -20,6 +28,11 @@ public abstract class Player {
 
     public void dealCard(Card card) {
         hand.add(card);
+        totalPoints += card.getRank().getValue();
+
+        if (totalPoints > 21) {
+            setBusted();
+        }
     }
 
     public List<Card> getHand() {
@@ -27,27 +40,52 @@ public abstract class Player {
     }
 
     public int getTotalPoints() {
-        int totalPoints = 0;
-        int numAces = 0;
-
-        for (Card card : hand) {
-            totalPoints += card.getRank().getValue();
-            if (card.getRank() == Rank.ACE) {
-                numAces++;
-            }
-        }
-
-        while (numAces > 0 && totalPoints <= 11) {
-            totalPoints += 10;
-            numAces--;
-        }
-
         return totalPoints;
     }
 
-    public abstract boolean shouldHit();
+    public boolean shouldHit() {
+        return !standing && totalPoints < 21;
+    }
 
-    public abstract void win();
+    public void setStanding() {
+        standing = true;
+    }
 
-    public abstract void lose();
+    public boolean isStanding() {
+        return standing;
+    }
+
+    public void setBusted() {
+        standing = true;
+    }
+
+    public boolean isBusted() {
+        return standing && totalPoints > 21;
+    }
+
+    public void win() {
+        balance += betAmount;
+        System.out.println(name + " wins!");
+    }
+
+    public void lose() {
+        balance -= betAmount;
+        System.out.println(name + " loses.");
+    }
+
+    public void tie() {
+        System.out.println(name + " ties with the dealer.");
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBetAmount(int betAmount) {
+        this.betAmount = betAmount;
+    }
+
+    public void withdraw(int betAmount) {
+        balance -= betAmount;
+    }
 }
