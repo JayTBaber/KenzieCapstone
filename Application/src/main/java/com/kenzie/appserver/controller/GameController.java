@@ -1,6 +1,8 @@
 package com.kenzie.appserver.controller;
 
+import com.kenzie.appserver.controller.model.*;
 import com.kenzie.appserver.service.GameService;
+import com.kenzie.appserver.service.model.Card;
 import com.kenzie.appserver.service.model.Game;
 import com.kenzie.appserver.service.model.Player;
 import org.springframework.http.HttpStatus;
@@ -39,5 +41,29 @@ public class GameController {
     public ResponseEntity<Game> createGame(@RequestBody List<Player> playerNames) {
         Game game = gameService.createGame(playerNames);
         return new ResponseEntity<>(game, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/place-bet")
+    public ResponseEntity<PlaceBetResponse> placeBet(@RequestBody PlaceBetRequest request) {
+        boolean betPlaced = gameService.placeBet(request.getPlayerId(), request.getBetAmount());
+        String message = betPlaced ? "Bet placed successfully." : "Bet placement failed.";
+        PlaceBetResponse response = new PlaceBetResponse(betPlaced, message);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/hit")
+    public ResponseEntity<HitResponse> hit(@RequestBody HitRequest request) {
+        Card cardDealt = gameService.hit(request.getPlayerId());
+        String message = "Card dealt: " + cardDealt.toString();
+        HitResponse response = new HitResponse(cardDealt, message);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/stand")
+    public ResponseEntity<StandResponse> stand(@RequestBody StandRequest request) {
+        gameService.stand(request.getPlayerId());
+        String message = "Player stood.";
+        StandResponse response = new StandResponse(message);
+        return ResponseEntity.ok(response);
     }
 }

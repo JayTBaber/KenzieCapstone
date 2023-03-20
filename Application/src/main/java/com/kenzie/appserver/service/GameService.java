@@ -11,8 +11,44 @@ import java.util.Optional;
 
 @Service
 public class GameService {
-
     private GameRepository gameRepository;
+
+    @Autowired
+    public GameService(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
+    }
+
+    public boolean placeBet(String playerId, int betAmount) {
+        Game game = gameRepository.findByPlayerId(playerId);
+        if (game == null || game.isGameOver()) {
+            return false;
+        }
+        boolean betPlaced = game.placeBet(playerId, betAmount);
+        if (betPlaced) {
+            gameRepository.save(game);
+        }
+        return betPlaced;
+    }
+
+    public Card hit(String playerId) {
+        Game game = gameRepository.findByPlayerId(playerId);
+        if (game == null || game.isGameOver()) {
+            return null;
+        }
+        Card card = game.dealCard(playerId);
+        gameRepository.save(game);
+        return card;
+    }
+
+    public void stand(String playerId) {
+        Game game = gameRepository.findByPlayerId(playerId);
+        if (game == null || game.isGameOver()) {
+            return;
+        }
+        game.stand(playerId);
+        gameRepository.save(game);
+    }
+
 
     public List<Game> getAllGames() {
         return (List<Game>) gameRepository.findAll();
