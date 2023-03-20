@@ -14,7 +14,7 @@ import java.util.Optional;
 public class GameService {
     private GameRepository gameRepository;
 
-    @Autowired
+
     public GameService(GameRepository gameRepository) {
         this.gameRepository = gameRepository;
     }
