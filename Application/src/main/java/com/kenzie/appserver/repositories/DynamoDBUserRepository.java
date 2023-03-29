@@ -6,6 +6,7 @@ import com.kenzie.appserver.service.model.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class DynamoDBUserRepository implements UserRepository {
 
@@ -26,6 +27,11 @@ public class DynamoDBUserRepository implements UserRepository {
     @Override
     public User findByUserName(String userName) {
         return mapper.load(User.class, userName);
+    }
+
+    @Override
+    public User findByUserID(UUID userID) {
+        return null;
     }
 
     @Override

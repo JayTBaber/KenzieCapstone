@@ -6,6 +6,7 @@ import com.kenzie.appserver.service.model.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class UserService {
 
@@ -13,8 +14,11 @@ public class UserService {
 
     public List<User> getAllUsers(){return (List<User>) userRepository.findAll();}
 
-    public Optional<User> getUserByUserName(String userName) {
-        return Optional.ofNullable(userRepository.findByUserName(String.valueOf(userName)));
+    public Optional<User> getUserByUserName(String username) {
+        return Optional.ofNullable(userRepository.findByUserName(String.valueOf(username)));
+    }
+    public Optional<User> getUserByUserID(UUID userID) {
+        return Optional.ofNullable(userRepository.findByUserID(userID));
     }
     public User saveUser(User user){return userRepository.saveUser(user);}
 
@@ -22,5 +26,5 @@ public class UserService {
 
     public void addUser(User user) {userRepository.saveUser(user);}
 
-    public void deleteUserByUserName(String userName) {userRepository.deleteUser(userName);}
+    public void deleteUserByUserName(String username) {userRepository.deleteUser(username);}
 }

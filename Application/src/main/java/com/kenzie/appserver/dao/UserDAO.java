@@ -4,6 +4,7 @@ import com.kenzie.appserver.service.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class UserDAO {
 
@@ -15,9 +16,17 @@ public class UserDAO {
 
     public List<User> getAllUsers() {return users;}
 
-    public User getUserByUserName(String userName) {
+    public User getUserByUserName(String username) {
         for (User user : users) {
-            if (user.getUserName().equals(userName)) {
+            if (user.getUserName().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
+    public User getUSerByUserID(UUID userID) {
+        for (User user : users) {
+            if (user.getUserId().equals(userID)){
                 return user;
             }
         }
