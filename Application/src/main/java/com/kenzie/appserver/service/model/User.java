@@ -1,8 +1,11 @@
 package com.kenzie.appserver.service.model;
 
+import java.util.UUID;
+
 public class User {
 
-    private String userName;
+    private UUID userId;
+    private String username;
 
     private String password;
 
@@ -13,16 +16,44 @@ public class User {
     private int losses;
 
 
-    public User(String userName, String password, int purse, int wins, int losses) {
-        this.userName = userName;
+    public User(UUID userId, String username, String password, int purse, int wins, int losses) {
+        this.userId = userId;
+        this.username = username;
         this.password = password;
         this.purse = purse;
         this.wins = wins;
         this.losses = losses;
     }
 
+
+    public UUID generateUserID(){
+        return userId = UUID.randomUUID();
+    }
+
+
+
+
+
+//TODO- finish user account creation
+    public void createUsername (String customUsername){
+        username = customUsername;
+    }
+
+    public void createPassword(String customPassword){
+        password = customPassword;
+    }
+
+
+
+
+
+
+
+
+
+    public UUID getUserId() {return userId;}
     public String getUserName() {
-        return userName;
+        return username;
     }
     public String getPassword() {
         return password;
@@ -37,8 +68,10 @@ public class User {
         return losses;
     }
 
-    public void setUserName(String userName){
-        this.userName = userName;
+
+    public void setUserId(UUID userId) {this.userId = userId;}
+    public void setUserName(String username){
+        this.username = username;
     }
     public void setPassword(String password){
         this.password = password;

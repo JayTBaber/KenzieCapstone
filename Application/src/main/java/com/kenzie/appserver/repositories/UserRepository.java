@@ -3,12 +3,15 @@ package com.kenzie.appserver.repositories;
 import com.kenzie.appserver.service.model.User;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserRepository {
 
     User saveUser(User user);
 
-    User findByUserName(String userName);
+    User findByUserName(String username);
+
+    User findByUserID(UUID userID);
 
     int savePurse(int purse);
 
@@ -20,5 +23,5 @@ public interface UserRepository {
 
     List<User> findAll();
 
-    void deleteByUserName(String userName);
+    void deleteByUserName(String username);
 }
