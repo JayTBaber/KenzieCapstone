@@ -3,16 +3,34 @@ package com.kenzie.appserver.service.model;
 import java.util.List;
 
 public class Game {
+    private String gameId;
     private final Deck deck;
-    private final List<Player> players;
+    private List<Player> players;
     private final Dealer dealer;
     private boolean gameOver;
 
-    public Game(List<Player> players) {
+    public Game(String gameId, List<Player> players) {
+        this.gameId = gameId;
         this.players = players;
         this.dealer = new Dealer();
         this.deck = new Deck();
         this.gameOver = false;
+    }
+
+    public Game(String gameId) {
+        this.gameId = gameId;
+        this.players = players;
+        this.dealer = new Dealer();
+        this.deck = new Deck();
+        this.gameOver = false;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public void dealCards() {

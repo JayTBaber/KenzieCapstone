@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PlayerService {
@@ -29,4 +30,11 @@ public class PlayerService {
     public void deletePlayer(Player player) {
         playerRepository.delete(String.valueOf(player));
     }
+
+    public Player createPlayer(Player player) {
+        String playerId = UUID.randomUUID().toString();
+        player.setPlayerId(playerId);
+        return playerRepository.save(player);
+    }
+
 }

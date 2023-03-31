@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/games")
@@ -65,5 +66,13 @@ public class GameController {
         String message = "Player stood.";
         StandResponse response = new StandResponse(message);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<Game> createGame(@RequestBody Game game) {
+        String gameId = UUID.randomUUID().toString();
+        game.setGameId(gameId);
+        gameService.createGame(gameId);
+        return new ResponseEntity<>(game, HttpStatus.CREATED);
     }
 }

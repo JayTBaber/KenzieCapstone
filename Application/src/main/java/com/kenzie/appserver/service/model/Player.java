@@ -1,11 +1,10 @@
 package com.kenzie.appserver.service.model;
 
-import com.kenzie.appserver.enums.Rank;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
+    private String playerId;
     private final String name;
     private final List<Card> hand;
     private int totalPoints;
@@ -87,5 +86,13 @@ public class Player {
 
     public void withdraw(int betAmount) {
         balance -= betAmount;
+    }
+
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
+    }
+
+    public String getPlayerId() {
+        return playerId;
     }
 }
