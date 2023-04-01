@@ -6,7 +6,7 @@
 }
 
 .background {
-    background-color: #eaeded;
+    background-color: #008800;
     margin: 0;
     counter-reset: section;
 }
@@ -87,3 +87,27 @@
 .state.active {
     display: block;
 }
+
+body {
+    text-align: center;
+}
+
+#hiddenCard img {
+    height: 200px;
+    width: 140px;
+    margin: 1px;
+}
+
+
+#dealer-hand img {
+    height: 200px;
+    width: 140px;
+    margin: 1px;
+}
+
+#player-hand img {
+    height: 200px;
+    width: 140px;
+    margin: 1px;
+}
+
