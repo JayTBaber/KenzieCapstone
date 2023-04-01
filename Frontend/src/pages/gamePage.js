@@ -23,7 +23,7 @@ function buildDeck() {
 
     deck = [];
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 8; i++) {
         for (let j = 0; j < suits.length; j++) {
             for (let k = 0; k < rank.length; k++) {
                 deck.push(rank[k] + '_of_' + suits[j]);
@@ -91,6 +91,12 @@ function gameStart() {
         purse += wager * 2.5;
         document.getElementById("purse").innerText = purse;
         endGame();
+    }
+
+    if (playerTotal === 22) {
+        playerTotal -= 10;
+        playerAce--;
+        document.getElementById('playerTotal').innerText = playerTotal;
     }
 
     if ((playerTotal === 10 || playerTotal === 11) && purse >= wager) {
@@ -240,8 +246,8 @@ function bet() {
 
             document.getElementById("deal").addEventListener("click", gameStart);
         }
+        document.getElementById('results').innerText = message;
     });
-    document.getElementById('results').innerText = message;
 }
 
 function gameResult() {
