@@ -28,4 +28,14 @@ public class PlayerDAO {
         }
         return null;
     }
+
+    public Player getPlayerById(String id) {
+        for (Player player : players) {
+            if (player.getPlayerId().equals(id)) {
+                return player;
+            }
+        }
+        return null;
+    }
+
 }
