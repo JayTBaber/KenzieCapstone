@@ -4,6 +4,8 @@ import com.kenzie.appserver.repositories.GameRepository;
 import com.kenzie.appserver.service.model.Card;
 import com.kenzie.appserver.service.model.Game;
 import com.kenzie.appserver.service.model.Player;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,6 +53,7 @@ public class GameService {
     }
 
 
+    @Cacheable("myCache")
     public List<Game> getAllGames() {
         return (List<Game>) gameRepository.findAll();
     }
@@ -63,6 +66,7 @@ public class GameService {
         return gameRepository.save(game);
     }
 
+    @CacheEvict(value = "myCache", allEntries=true)
     public void deleteGame(Game game) {
         gameRepository.delete(game.toString());
     }

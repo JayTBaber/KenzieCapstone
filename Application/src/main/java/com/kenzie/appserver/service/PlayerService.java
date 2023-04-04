@@ -3,6 +3,8 @@ package com.kenzie.appserver.service;
 import com.kenzie.appserver.repositories.PlayerRepository;
 import com.kenzie.appserver.service.model.Player;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +17,7 @@ public class PlayerService {
 
     private PlayerRepository playerRepository;
 
+    @Cacheable("myCache")
     public List<Player> getAllPlayers() {
         return (List<Player>) playerRepository.findAll();
     }
@@ -27,6 +30,7 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
+    @CacheEvict(value = "myCache", allEntries=true)
     public void deletePlayer(Player player) {
         playerRepository.delete(String.valueOf(player));
     }

@@ -3,6 +3,9 @@ package com.kenzie.appserver.service;
 import com.kenzie.appserver.repositories.ScoreRepository;
 import com.kenzie.appserver.service.model.Score;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +16,7 @@ public class ScoreService {
 
     private ScoreRepository scoreRepository;
 
+    @Cacheable("myCache")
     public List<Score> getAllScores() {
         return (List<Score>) scoreRepository.findAll();
     }
@@ -33,6 +37,7 @@ public class ScoreService {
         scoreRepository.save(score);
     }
 
+    @CachePut("myCache")
     public void updateScoreById(long id, Score score) {
         Optional<Score> scoreOptional = Optional.ofNullable(scoreRepository.findById(String.valueOf(id)));
         if (scoreOptional.isPresent()) {
@@ -44,6 +49,7 @@ public class ScoreService {
         }
     }
 
+    @CacheEvict(value = "myCache", allEntries=true)
     public void deleteScoreById(long id) {
         scoreRepository.deleteById(id);
     }
