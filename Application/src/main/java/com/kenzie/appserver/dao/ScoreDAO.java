@@ -4,7 +4,7 @@ import com.kenzie.appserver.repositories.model.ScoreRecord;
 
 import java.util.List;
 
-public interface ScoreDao {
+public interface ScoreDAO {
 
     ScoreRecord save(ScoreRecord score);
 

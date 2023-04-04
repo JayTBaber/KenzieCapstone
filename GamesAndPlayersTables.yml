@@ -23,8 +23,34 @@ Resources:
       AttributeDefinitions:
         - AttributeName: "playerId"
           AttributeType: "S"
+        - AttributeName: "name"
+          AttributeType: "S"
+        - AttributeName: "balance"
+          AttributeType: "N"
       KeySchema:
         - AttributeName: "playerId"
           KeyType: "HASH"
       BillingMode: PAY_PER_REQUEST
       TableName: "Players"
+      GlobalSecondaryIndexes:
+        - IndexName: "NameIndex"
+          KeySchema:
+            - AttributeName: "name"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+        - IndexName: "BalanceIndex"
+          KeySchema:
+            - AttributeName: "balance"
+              KeyType: "HASH"
+            - AttributeName: "playerId"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
+      SSESpecification:
+        SSEEnabled: true
+      StreamSpecification:
+        StreamViewType: "NEW_AND_OLD_IMAGES"
+      TimeToLiveSpecification:
+        AttributeName: "ttl"
+        Enabled: false
