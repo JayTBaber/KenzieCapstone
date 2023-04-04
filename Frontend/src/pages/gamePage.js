@@ -23,7 +23,7 @@ function buildDeck() {
 
     deck = [];
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 8; i++) {
         for (let j = 0; j < suits.length; j++) {
             for (let k = 0; k < rank.length; k++) {
                 deck.push(rank[k] + '_of_' + suits[j]);
@@ -87,11 +87,16 @@ function gameStart() {
 
     if (playerTotal === 21) {
         canHit = false;
-        message = "Blackjack! You win!";
-        document.getElementById('results').innerText = message;
+        message = "Kenzie 21! You win!";
         purse += wager * 2.5;
         document.getElementById("purse").innerText = purse;
         endGame();
+    }
+
+    if (playerTotal === 22) {
+        playerTotal -= 10;
+        playerAce--;
+        document.getElementById('playerTotal').innerText = playerTotal;
     }
 
     if ((playerTotal === 10 || playerTotal === 11) && purse >= wager) {
@@ -103,9 +108,8 @@ function gameStart() {
     if (playerTotal < 21) {
         canHit = true;
         message = "Click 'Hit' to get another card or 'Stand' to keep your current hand.";
-        document.getElementById('results').innerText = message;
     }
-
+    document.getElementById('results').innerText = message;
 }
 function getCardValue(card) {
     let value = card.split('_')[0];
@@ -150,7 +154,6 @@ function hit() {
     if (playerTotal > 21) {
         canHit = false;
         message = "You busted! You lose! Click 'Play Again' to play again at same wager or 'Bet' to change your wager.";
-        document.getElementById('results').innerText = message;
         endGame();
     }
 
@@ -164,6 +167,7 @@ function hit() {
 
     document.getElementById('playerTotal').innerText = playerTotal;
 
+    document.getElementById('results').innerText = message;
 
 }
 
@@ -230,10 +234,8 @@ function bet() {
         wager = document.getElementById("wagerInput").value;
         if (wager > purse) {
             message = "You don't have enough money to make that bet!";
-            document.getElementById('results').innerText = message;
         } else if (wager < 1) {
             message = "You must bet at least $1.";
-            document.getElementById('results').innerText = message;
         } else if (wager <= purse) {
             purse -= wager;
             document.getElementById("purse").innerText = purse;
@@ -242,9 +244,9 @@ function bet() {
             document.getElementById("deal").style.display = "inline";
             message = "Click 'Deal' to start the game.";
 
-            document.getElementById('results').innerText = message;
             document.getElementById("deal").addEventListener("click", gameStart);
         }
+        document.getElementById('results').innerText = message;
     });
 }
 
@@ -283,10 +285,8 @@ function endGame() {
     document.getElementById("playAgain").style.display = "inline";
     document.getElementById("reset").style.display = "inline";
 
-    message = "";
     document.getElementById("playAgain").addEventListener("click", gameRestart);
     document.getElementById("reset").addEventListener("click", reset);
-
 }
 
 function gameRestart() {
@@ -316,12 +316,10 @@ function gameRestart() {
     if (purse === 0) {
         message = "You're out of money! Click 'Reset' to start over.";
         document.getElementById("playAgain").style.display = "none";
-        document.getElementById('results').innerText = message;
         document.getElementById("reset").style.display = "inline";
         document.getElementById("reset").addEventListener("click", reset);
     } else if (wager > purse) {
         message = "You don't have enough money to make that bet!";
-        document.getElementById('results').innerText = message;
 
         document.getElementById("wagerInput").style.display = "inline";
         document.getElementById("bet").style.display = "inline";
@@ -333,6 +331,7 @@ function gameRestart() {
 
         gameStart();
     }
+    document.getElementById('results').innerText = message;
 }
 
 function reset() {
