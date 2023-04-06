@@ -1,25 +1,34 @@
 package com.kenzie.appserver.controller.model;
 
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlayerResponse {
 
-    private String id;
+    @JsonProperty("playerId")
+    private String playerId;
+
+    @JsonProperty("name")
     private String name;
+
+    @JsonProperty("email")
     private String email;
 
-    public PlayerResponse() {}
 
-    public PlayerResponse(String id, String name, String email) {
-        this.id = id;
+    public PlayerResponse(String playerId, String name, String email) {
+        this.playerId = playerId;
         this.name = name;
         this.email = email;
     }
 
-    public String getId() {
-        return id;
+    public String getPlayerId() {
+        return playerId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPlayerId(String id) {
+        this.playerId = playerId;
     }
 
     public String getName() {

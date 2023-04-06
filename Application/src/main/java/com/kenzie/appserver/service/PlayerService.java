@@ -17,6 +17,11 @@ public class PlayerService {
 
     private PlayerRepository playerRepository;
 
+    @Autowired
+    public PlayerService(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
+
     @Cacheable("myCache")
     public List<Player> getAllPlayers() {
         return (List<Player>) playerRepository.findAll();

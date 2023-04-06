@@ -16,6 +16,9 @@ public class DynamoDbConfig {
     @Value("${dynamodb.override_endpoint}")
     String dynamoOverrideEndpoint;
 
+    @Value("${dynamodb.endpoint}")
+    String dynamoEndpoint;
+
     @Bean
     @ConditionalOnProperty(name = "dynamodb.override_endpoint", havingValue = "true")
     public AmazonDynamoDB amazonDynamoDB(@Value("${dynamodb.endpoint}") String dynamoEndpoint) {
@@ -27,12 +30,16 @@ public class DynamoDbConfig {
                 .standard()
                 .withEndpointConfiguration(endpointConfig)
                 .build();
-
     }
 
     @Bean(name = "amazonDynamoDB")
     public AmazonDynamoDB defaultAmazonDynamoDb() {
-        return AmazonDynamoDBClientBuilder.defaultClient();
+        AmazonDynamoDBClientBuilder builder = AmazonDynamoDBClientBuilder.standard();
+        if (Boolean.valueOf(dynamoOverrideEndpoint)) {
+            AwsClientBuilder.EndpointConfiguration endpointConfig = new AwsClientBuilder.EndpointConfiguration(dynamoEndpoint, "us-east-1");
+            builder.withEndpointConfiguration(endpointConfig);
+        }
+        return builder.build();
     }
 
     @Bean

@@ -1,5 +1,6 @@
 package com.kenzie.appserver.repositories.model;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.kenzie.appserver.service.model.Card;
@@ -7,9 +8,13 @@ import com.kenzie.appserver.service.model.Card;
 import java.util.List;
 import java.util.Objects;
 
-@DynamoDBTable(tableName = "Games")
+@DynamoDBTable(tableName = "Players")
 public class PlayerRecord {
     private String playerId;
+    private String name;
+
+    private String email;
+
     private int betAmount;
     private List<Card> cards;
     private int totalPoints;
@@ -17,7 +22,7 @@ public class PlayerRecord {
     private boolean isStanding;
     private String result;
 
-    @DynamoDBHashKey(attributeName = "gameId")
+    @DynamoDBHashKey(attributeName = "playerId")
     public String getPlayerId() {
         return playerId;
     }
@@ -26,12 +31,22 @@ public class PlayerRecord {
         this.playerId = playerId;
     }
 
-    public int getBetAmount() {
-        return betAmount;
+    @DynamoDBAttribute(attributeName = "name")
+    public String getName() {
+        return name;
     }
 
-    public void setBetAmount(int betAmount) {
-        this.betAmount = betAmount;
+    @DynamoDBAttribute(attributeName = "email")
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setBetAmount(String name) {
+        this.name = name;
     }
 
     public List<Card> getCards() {

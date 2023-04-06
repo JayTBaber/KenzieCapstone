@@ -1,5 +1,6 @@
 package com.kenzie.appserver.service.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Game {
@@ -8,6 +9,9 @@ public class Game {
     private List<Player> players;
     private final Dealer dealer;
     private boolean gameOver;
+    private String playerId;
+    private int score;
+    private LocalDateTime timestamp;
 
     public Game(String gameId, List<Player> players) {
         this.gameId = gameId;
@@ -19,7 +23,6 @@ public class Game {
 
     public Game(String gameId) {
         this.gameId = gameId;
-        this.players = players;
         this.dealer = new Dealer();
         this.deck = new Deck();
         this.gameOver = false;
@@ -29,8 +32,16 @@ public class Game {
         return gameId;
     }
 
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
+    public String getPlayerId() {
+        return playerId;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
     public void dealCards() {

@@ -6,11 +6,15 @@
 //import java.util.ArrayList;
 //import java.util.List;
 //
+//import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+//import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+//import com.kenzie.appserver.config.DynamoDbConfig;
 //import com.kenzie.appserver.service.model.Game;
 //import com.kenzie.appserver.service.model.Player;
 //import com.kenzie.appserver.service.model.Score;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
+//import org.junit.runner.RunWith;
 //import org.mockito.InjectMocks;
 //import org.mockito.Mock;
 //import org.mockito.MockitoAnnotations;
@@ -18,9 +22,43 @@
 //import com.kenzie.appserver.dao.GameDAO;
 //import com.kenzie.appserver.dao.PlayerDAO;
 //import com.kenzie.appserver.dao.ScoreDAO;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.test.context.TestPropertySource;
+//import org.springframework.test.context.junit4.SpringRunner;
 //
 //
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(classes = {PlayerService.class, DynamoDbConfig.class})
+//@TestPropertySource(locations = "classpath:application.properties")
 //public class ServiceTests {
+//    @Autowired
+//    private PlayerService playerService;
+//
+//    @Autowired
+//    private DynamoDBMapper dynamoDBMapper;
+//
+//    @Value("${dynamodb.Players}")
+//    private String tableName;
+//
+//    @Test
+//    public void testCreatePlayer() {
+//        // Create a new player
+//        Player player = new Player();
+//        player.setPlayerId("John Doe");
+//
+//
+//        // Save the player to DynamoDB
+//        playerService.createPlayer(player);
+//
+//        // Query the table to check if the player is stored
+//        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+//        List<Player> players = dynamoDBMapper.scan(Player.class, scanExpression);
+//        assertEquals(1, players.size());
+//        assertEquals("John Doe", players.get(0).getName());
+//    }
+
 //
 //    @Mock
 //    private GameDAO gameDao;

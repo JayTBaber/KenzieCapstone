@@ -1,9 +1,12 @@
 package com.kenzie.appserver.service;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.kenzie.appserver.repositories.GameRepository;
 import com.kenzie.appserver.service.model.Card;
 import com.kenzie.appserver.service.model.Game;
 import com.kenzie.appserver.service.model.Player;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -14,9 +17,12 @@ import java.util.UUID;
 
 @Service
 public class GameService {
+
+
+    private AmazonDynamoDB amazonDynamoDB;
     private GameRepository gameRepository;
 
-
+    @Autowired
     public GameService(GameRepository gameRepository) {
         this.gameRepository = gameRepository;
     }
@@ -75,6 +81,8 @@ public class GameService {
         String gameId = UUID.randomUUID().toString();
         Game game = new Game(gameId, playerNames);
         gameRepository.save(game);
+        DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDB);
+        mapper.save(game);
         return game;
     }
 

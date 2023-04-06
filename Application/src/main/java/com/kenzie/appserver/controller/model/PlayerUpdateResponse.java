@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotEmpty;
 
-public class PlayerRequest {
+public class PlayerUpdateResponse {
 
     @NotEmpty
     @JsonProperty("playerId")
@@ -14,21 +14,17 @@ public class PlayerRequest {
     @JsonProperty("name")
     private String name;
 
+    @NotEmpty
     @JsonProperty("email")
     private String email;
 
 
-    public PlayerRequest(String playerId, String name, String email) {
-        this.playerId = playerId;
-        this.name = name;
-        this.email = email;
-    }
 
     public String getPlayerId() {
         return playerId;
     }
 
-    public void setPlayerId(String playerId) {
+    public void setPlayerId(String id) {
         this.playerId = playerId;
     }
 
@@ -47,5 +43,4 @@ public class PlayerRequest {
     public void setEmail(String email) {
         this.email = email;
     }
-
 }

@@ -10,11 +10,12 @@ import java.util.Optional;
 public class DynamoDBPlayerRepository implements PlayerRepository {
 
     private final DynamoDBMapper mapper;
-    PlayerService playerService = new PlayerService();
+    private final PlayerService playerService;
 
 
     public DynamoDBPlayerRepository(DynamoDBMapper mapper) {
         this.mapper = mapper;
+        this.playerService = new PlayerService(this);
     }
 
     @Override

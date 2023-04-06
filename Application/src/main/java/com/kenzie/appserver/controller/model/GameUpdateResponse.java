@@ -1,18 +1,24 @@
 package com.kenzie.appserver.controller.model;
 
-import java.time.LocalDateTime;
-import com.fasterxml.jackson.annotation.JsonInclude;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class GameResponse {
 
+import java.time.LocalDateTime;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+
+public class GameUpdateResponse {
+
+    @NotEmpty
     @JsonProperty("gameId")
     private String gameId;
 
+    @NotEmpty
     @JsonProperty("playerId")
     private String playerId;
 
+    @Min(0)
     @JsonProperty("score")
     private int score;
 

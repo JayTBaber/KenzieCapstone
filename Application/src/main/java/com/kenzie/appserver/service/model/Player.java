@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Player {
     private String playerId;
-    private final String name;
-    private final List<Card> hand;
+    private String name;
+    private List<Card> hand;
     private int totalPoints;
     private boolean standing;
     private int balance;
@@ -20,6 +20,7 @@ public class Player {
         this.balance = balance;
         this.betAmount = 0;
     }
+
 
     public String getName() {
         return name;

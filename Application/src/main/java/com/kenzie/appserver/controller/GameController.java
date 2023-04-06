@@ -28,9 +28,9 @@ public class GameController {
         return new ResponseEntity<>(games, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<Game>> getGameById(@PathVariable int id) {
-        Optional<Game> game = gameService.getGameById(id);
+    @GetMapping("/{gameId}")
+    public ResponseEntity<Optional<Game>> getGameById(@PathVariable int gameId) {
+        Optional<Game> game = gameService.getGameById(gameId);
         if (game.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -71,7 +71,7 @@ public class GameController {
     @PostMapping
     public ResponseEntity<Game> createGame(@RequestBody Game game) {
         String gameId = UUID.randomUUID().toString();
-        game.setGameId(gameId);
+        game.getGameId();
         gameService.createGame(gameId);
         return new ResponseEntity<>(game, HttpStatus.CREATED);
     }
