@@ -1,12 +1,16 @@
 :root {
     /* css variables: https://developer.mozilla.org/en-US/docs/Web/CSS/var */
-    --primary-color: #131921;
-    --secondary-color: #fff;
+    --primary-color: rgba(58, 210, 16, 0);
+    --shawdow-color: #000000 1, 1, 1, 0.5;
+    --secondary-color: #ffc200;
     --error-color: rgba(194, 0, 0, 0.71);
 }
 
 .background {
     background-color: #008800;
+    background-image: url("images/table.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
     margin: 0;
     counter-reset: section;
 }
@@ -40,17 +44,168 @@
 }
 
 .button, button {
-    background: #aed9ff;
+    background: #ffcc00;
     padding: 3px;
     border-radius: 3px;
     text-decoration: none;
-    color: black;
+    color: #000000;
     border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
     cursor: pointer;
 }
 
 .button:hover, button:hover {
-    background: #9cc3e4;
+    background: #ffae00;
+}
+
+.music-button {
+    background: #00e1ff;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.music-button:hover {
+    background: #86afbd;
+}
+
+.bet-button {
+    background: #69ea00;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.bet-button:hover {
+    background: #26ab00;
+}
+
+.deal-button {
+    background: #ffa500;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.deal-button:hover {
+    background: #ff8c00;
+}
+
+.hit-button {
+    background: #2bda1a;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.hit-button:hover {
+    background: #00ff05;
+}
+
+.stand-button {
+    background: #ff4848;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.stand-button:hover {
+    background: #ff0000;
+}
+
+.double-button {
+    background: #ff00ff;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.double-button:hover {
+    background: #ff00b3;
+}
+
+.play-again-button {
+    background: #00f7ff;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.play-again-button:hover {
+    background: #00d4ff;
+}
+
+.change-wager-button {
+    background: #2fff00;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.change-wager-button:hover {
+    background: #00ff00;
+}
+
+.quit-button {
+    background: #ff4c00;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.quit-button:hover {
+    background: #ff0000;
+}
+
+.reset-button {
+    background: #8e24ff;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.reset-button:hover {
+    background: #ff00ff;
 }
 
 .card {
@@ -90,6 +245,8 @@
 
 body {
     text-align: center;
+    color: #ffdd00;
+    text-shadow: #000000 1px 1px 1px;
 }
 
 #hiddenCard img {
@@ -110,4 +267,3 @@ body {
     width: 140px;
     margin: 1px;
 }
-

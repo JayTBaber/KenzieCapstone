@@ -171,8 +171,11 @@ function hit() {
 
     if (playerTotal > 21) {
         canHit = false;
-        message = "You busted! You lose! Click 'Play Again' to play again at same wager, " +
+        message = "You busted! You lose! Click 'Play Again' to play again, " +
             "'Change Wager' to change your wager, or 'Quit' to end the game.";
+        if (purse === 0) {
+            message = "You busted! You lose! Click 'Play Again' to play again, or 'Quit' to end the game.";
+        }
         bust.play();
         endGame();
     }
@@ -283,7 +286,7 @@ function bet() {
 
 function gameResult() {
     if (dealerTotal > 21) {
-        message = "Dealer busted! You win! Click 'Play Again' to play again at same wager, " +
+        message = "Dealer busted! You win! Click 'Play Again' to play again, " +
             "'Change Wager' to change your wager, or 'Quit' to end the game.";
         purse += wager * 2;
         document.getElementById("purse").innerText = purse;
@@ -293,12 +296,16 @@ function gameResult() {
         endGame();
     } else if (dealerTotal > playerTotal) {
         message = "Dealer has a higher hand! You lose! " +
-            "Click 'Play Again' to play again at same wager, 'Change Wager' to change your wager, or 'Quit' to end the game.";
+            "Click 'Play Again' to play again, 'Change Wager' to change your wager, or 'Quit' to end the game.";
+        if (purse ===0) {
+            message = "Dealer has a higher hand! You lose! " +
+                "Click 'Play Again' to play again, or 'Quit' to end the game.";
+        }
         loseHand.play();
         endGame();
     } else if (dealerTotal < playerTotal) {
         message = "You have a higher hand! You win! " +
-            "Click 'Play Again' to play again at same wager, 'Change Wager' to change your wager, or 'Quit' to end the game.";
+            "Click 'Play Again' to play again, 'Change Wager' to change your wager, or 'Quit' to end the game.";
         purse += wager * 2;
         document.getElementById("purse").innerText = purse;
         window.localStorage.setItem('purse', purse);
@@ -307,7 +314,7 @@ function gameResult() {
         endGame();
     } else {
         message = "You and the dealer have the same hand! " +
-            "It's a Push! Click 'Play Again' to play again at same wager, " +
+            "It's a Push! Click 'Play Again' to play again, " +
             "'Change Wager' to change your wager, or 'Quit' to end the game.";
         purse += wager / 2;
         document.getElementById("purse").innerText = purse;
