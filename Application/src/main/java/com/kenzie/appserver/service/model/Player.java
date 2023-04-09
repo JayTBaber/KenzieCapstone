@@ -85,6 +85,10 @@ public class Player {
         this.betAmount = betAmount;
     }
 
+    public int getBetAmount() {
+        return betAmount;
+    }
+
     public void withdraw(int betAmount) {
         balance -= betAmount;
     }

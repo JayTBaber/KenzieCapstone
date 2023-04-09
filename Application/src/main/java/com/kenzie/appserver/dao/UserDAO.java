@@ -24,12 +24,4 @@ public class UserDAO {
         }
         return null;
     }
-    public User getUSerByUserID(UUID userID) {
-        for (User user : users) {
-            if (user.getUserId().equals(userID)){
-                return user;
-            }
-        }
-        return null;
-    }
 }

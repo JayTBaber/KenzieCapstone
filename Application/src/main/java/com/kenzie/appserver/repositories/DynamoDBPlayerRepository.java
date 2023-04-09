@@ -6,7 +6,6 @@ import com.kenzie.appserver.service.PlayerService;
 import com.kenzie.appserver.service.model.Player;
 
 import java.util.List;
-import java.util.Optional;
 
 public class DynamoDBPlayerRepository implements PlayerRepository {
 
@@ -32,7 +31,7 @@ public class DynamoDBPlayerRepository implements PlayerRepository {
 
     @Override
     public void delete(String id) {
-        Optional<Player> player = playerService.getPlayerById(Long.parseLong(id));
+        Player player = playerService.getPlayerById(id);
         mapper.delete(player);
     }
 

@@ -1,0 +1,52 @@
+Resources:
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "username"
+          AttributeType: "S"
+        - AttributeName: "password"
+          AttributeType: "S"
+        - AttributeName: "purse"
+          AttributeType: "N"
+        - AttributeName: "wins"
+          AttributeType: "N"
+        - AttributeName: "losses"
+          AttributeType: "N"
+      KeySchema:
+        - AttributeName: "username"
+          KeyType: "HASH"
+      BillingMode: PAY_PER_REQUEST
+      TableName: "Users"
+      GlobalSecondaryIndexes:
+        - IndexName: "PasswordIndex"
+          KeySchema:
+            - AttributeName: "password"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+        - IndexName: "PurseIndex"
+          KeySchema:
+            - AttributeName: "purse"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+        - IndexName: "WinsIndex"
+          KeySchema:
+            - AttributeName: "wins"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+        - IndexName: "LossesIndex"
+          KeySchema:
+            - AttributeName: "losses"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+      SSESpecification:
+        SSEEnabled: true
+      StreamSpecification:
+        StreamViewType: "NEW_AND_OLD_IMAGES"
+      TimeToLiveSpecification:
+        AttributeName: "ttl"
+        Enabled: false
