@@ -107,6 +107,7 @@ function gameStart() {
         window.localStorage.setItem('purse', purse);
         winMoney.play();
         win21.play();
+        document.getElementById("overlay").style.display = "block";
         endGame();
     }
 
