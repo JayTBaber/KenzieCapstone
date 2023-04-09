@@ -26,9 +26,9 @@ public class PlayerController {
     }
 
     @GetMapping("/{playerId}")
-    public ResponseEntity<Optional<Player>> getPlayerById(@PathVariable int playerId) {
-        Optional<Player> player = playerService.getPlayerById(playerId);
-        if (player.isEmpty()) {
+    public ResponseEntity<Player> getPlayerById(@PathVariable int playerId) {
+        Player player = playerService.getPlayerById(String.valueOf(playerId));
+        if (player == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(player, HttpStatus.OK);
