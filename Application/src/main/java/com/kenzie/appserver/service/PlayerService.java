@@ -15,7 +15,7 @@ import java.util.UUID;
 public class PlayerService {
 
 
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
 
     @Autowired
     public PlayerService(PlayerRepository playerRepository) {

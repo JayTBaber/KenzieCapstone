@@ -5,12 +5,12 @@ Resources:
       AttributeDefinitions:
         - AttributeName: "gameId"
           AttributeType: "S"
-        - AttributeName: "owner"
+        - AttributeName: "playerId"
           AttributeType: "S"
       KeySchema:
         - AttributeName: "gameId"
           KeyType: "HASH"
-        - AttributeName: "owner"
+        - AttributeName: "playerId"
           KeyType: "RANGE"
       PointInTimeRecoverySpecification:
         PointInTimeRecoveryEnabled: false

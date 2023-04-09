@@ -1,88 +1,98 @@
-//package com.kenzie.appserver.service;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.mockito.Mockito.*;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-//import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
-//import com.kenzie.appserver.config.DynamoDbConfig;
-//import com.kenzie.appserver.service.model.Game;
-//import com.kenzie.appserver.service.model.Player;
-//import com.kenzie.appserver.service.model.Score;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.junit.runner.RunWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.MockitoAnnotations;
-//
-//import com.kenzie.appserver.dao.GameDAO;
-//import com.kenzie.appserver.dao.PlayerDAO;
-//import com.kenzie.appserver.dao.ScoreDAO;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.test.context.TestPropertySource;
-//import org.springframework.test.context.junit4.SpringRunner;
-//
-//
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(classes = {PlayerService.class, DynamoDbConfig.class})
-//@TestPropertySource(locations = "classpath:application.properties")
-//public class ServiceTests {
-//    @Autowired
-//    private PlayerService playerService;
-//
-//    @Autowired
-//    private DynamoDBMapper dynamoDBMapper;
-//
-//    @Value("${dynamodb.Players}")
-//    private String tableName;
-//
-//    @Test
-//    public void testCreatePlayer() {
-//        // Create a new player
-//        Player player = new Player();
-//        player.setPlayerId("John Doe");
-//
-//
-//        // Save the player to DynamoDB
-//        playerService.createPlayer(player);
-//
-//        // Query the table to check if the player is stored
-//        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-//        List<Player> players = dynamoDBMapper.scan(Player.class, scanExpression);
-//        assertEquals(1, players.size());
-//        assertEquals("John Doe", players.get(0).getName());
-//    }
+package com.kenzie.appserver.service;
 
-//
-//    @Mock
-//    private GameDAO gameDao;
-//
-//    @Mock
-//    private PlayerDAO playerDao;
-//
-//    @Mock
-//    private ScoreDAO scoreDao;
-//
-//    @InjectMocks
-//    private GameService gameService;
-//
-//    @InjectMocks
-//    private PlayerService playerService;
-//
-//    @InjectMocks
-//    private ScoreService scoreService;
-//
-//    @BeforeEach
-//    public void init() {
-//        MockitoAnnotations.initMocks(this);
-//    }
-//
+import static java.util.UUID.randomUUID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.kenzie.appserver.config.DynamoDbConfig;
+import com.kenzie.appserver.repositories.PlayerRepository;
+import com.kenzie.appserver.repositories.model.PlayerRecord;
+import com.kenzie.appserver.service.model.Game;
+import com.kenzie.appserver.service.model.Player;
+import com.kenzie.appserver.service.model.Score;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.kenzie.appserver.dao.GameDAO;
+import com.kenzie.appserver.dao.PlayerDAO;
+import com.kenzie.appserver.dao.ScoreDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
+
+
+
+public class ServiceTests {
+
+    @Mock
+    private PlayerRepository playerRepository;
+
+    @Autowired
+    private DynamoDBMapper dynamoDBMapper;
+
+    @Value("${dynamodb.Players}")
+    private String tableName;
+
+    @Mock
+    private GameDAO gameDao;
+
+    @Mock
+    private PlayerDAO playerDao;
+
+    @Mock
+    private ScoreDAO scoreDao;
+
+    @InjectMocks
+    private GameService gameService;
+
+    @InjectMocks
+    private PlayerService playerService;
+
+    @InjectMocks
+    private ScoreService scoreService;
+
+    @BeforeEach
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    void addNewPlayer() {
+        // GIVEN
+        String playerid = randomUUID().toString();
+
+        Player player = new Player(playerid, 100);
+
+        ArgumentCaptor<PlayerRecord> playerRecordCaptor = ArgumentCaptor.forClass(PlayerRecord.class);
+
+        // WHEN
+        Player returnedPlayer = playerService.createPlayer(player);
+
+        // THEN
+        Assertions.assertNotNull(returnedPlayer);
+
+        verify(playerRepository).save(playerRecordCaptor.capture());
+
+        PlayerRecord record = playerRecordCaptor.getValue();
+
+        Assertions.assertNotNull(record, "The player record is returned");
+        assertEquals(record.getPlayerId(), player.getPlayerId(), "The player id matches");
+        assertEquals(record.getName(), player.getName(), "The player name matches");
+    }
+
 //    // Tests for GameService
 //
 //    @Test
@@ -183,4 +193,4 @@
 //        List<Score> actualScores = scoreService.getTopScoresForGame(1);
 //        assertEquals(expectedScores, actualScores);
 //    }
-//}
+}

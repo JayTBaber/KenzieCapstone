@@ -3,12 +3,13 @@ package com.kenzie.appserver.controller.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.Optional;
 
 public class PlayerRequest {
 
     @NotEmpty
     @JsonProperty("playerId")
-    private String playerId;
+    private Optional<String> playerId;
 
     @NotEmpty
     @JsonProperty("name")
@@ -18,17 +19,14 @@ public class PlayerRequest {
     private String email;
 
 
-    public PlayerRequest(String playerId, String name, String email) {
-        this.playerId = playerId;
-        this.name = name;
-        this.email = email;
+    public PlayerRequest() {
     }
 
-    public String getPlayerId() {
+    public Optional<String> getPlayerId() {
         return playerId;
     }
 
-    public void setPlayerId(String playerId) {
+    public void setPlayerId(Optional<String> playerId) {
         this.playerId = playerId;
     }
 

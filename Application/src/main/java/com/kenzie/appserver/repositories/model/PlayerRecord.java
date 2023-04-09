@@ -1,8 +1,6 @@
 package com.kenzie.appserver.repositories.model;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.kenzie.appserver.service.model.Card;
 
 import java.util.List;
@@ -12,17 +10,17 @@ import java.util.Objects;
 public class PlayerRecord {
     private String playerId;
     private String name;
-
     private String email;
-
-    private int betAmount;
+    private int balance;
     private List<Card> cards;
     private int totalPoints;
     private boolean isBusted;
     private boolean isStanding;
     private String result;
 
+
     @DynamoDBHashKey(attributeName = "playerId")
+    @DynamoDBIndexRangeKey(globalSecondaryIndexName = "BalanceIndex")
     public String getPlayerId() {
         return playerId;
     }
@@ -31,15 +29,25 @@ public class PlayerRecord {
         this.playerId = playerId;
     }
 
-    @DynamoDBAttribute(attributeName = "name")
+    @DynamoDBIndexHashKey(globalSecondaryIndexName = "NameIndex", attributeName = "name")
     public String getName() {
         return name;
+    }
+
+    @DynamoDBIndexHashKey(globalSecondaryIndexName = "BalanceIndex", attributeName = "balance")
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 
     @DynamoDBAttribute(attributeName = "email")
     public String getEmail() {
         return email;
     }
+
 
     public void setEmail(String email) {
         this.email = email;

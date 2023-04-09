@@ -163,4 +163,58 @@ Resources:
           Properties:
             Path: /example/
             Method: post
-
+  SetGameDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ServiceLambda/build/distributions/ServiceLambda.zip
+      Handler: com.kenzie.capstone.service.lambda.SetGameData
+      Runtime: java11
+      Description: Set Game Data
+      MemorySize: 512
+      Timeout: 240
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+        - AmazonDynamoDBFullAccess
+      Tracing: Active
+      Events:
+        UpdateResource:
+          Type: Api
+          Properties:
+            Path: /game/
+            Method: post
+  GetGameDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ServiceLambda/build/distributions/ServiceLambda.zip
+      Handler: com.kenzie.capstone.service.lambda.GetGameData
+      Runtime: java11
+      Description: Get Game Data for given id
+      MemorySize: 512
+      Timeout: 240
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+        - AmazonDynamoDBFullAccess
+      Tracing: Active
+      VpcConfig:
+        SecurityGroupIds: [ { "Fn::GetAtt": [ "SecurityGroup",  "GroupId" ] } ]
+        SubnetIds:
+          - !Ref PublicSubnet
+      Environment:
+        Variables:
+          JEDIS_URL: !GetAtt ReplicationGroup.PrimaryEndPoint.Address
+      Events:
+        UpdateResource:
+          Type: Api
+          Properties:
+            Path: /game/{id}
+            Method: get

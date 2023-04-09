@@ -75,4 +75,11 @@ public class GameController {
         gameService.createGame(gameId);
         return new ResponseEntity<>(game, HttpStatus.CREATED);
     }
+
+    @PostMapping
+    public ResponseEntity<GameResponse> startNewGame(@RequestBody GameRequest gameRequest) {
+        GameResponse response = gameService.startNewGame(gameRequest.getPlayerId());
+        return ResponseEntity.ok(response);
+    }
+
 }

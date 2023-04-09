@@ -2,10 +2,15 @@ package com.kenzie.appserver.service;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.kenzie.appserver.controller.model.GameResponse;
+import com.kenzie.appserver.repositories.DynamoDBGameRepository;
 import com.kenzie.appserver.repositories.GameRepository;
 import com.kenzie.appserver.service.model.Card;
 import com.kenzie.appserver.service.model.Game;
 import com.kenzie.appserver.service.model.Player;
+import com.kenzie.capstone.service.client.LambdaServiceClient;
+import com.kenzie.capstone.service.model.ExampleData;
+import com.kenzie.capstone.service.model.GameData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,9 +27,15 @@ public class GameService {
     private AmazonDynamoDB amazonDynamoDB;
     private GameRepository gameRepository;
 
+    private LambdaServiceClient lambdaServiceClient;
+
     @Autowired
-    public GameService(GameRepository gameRepository) {
+    public GameService(GameRepository gameRepository, LambdaServiceClient lambdaServiceClient) {
         this.gameRepository = gameRepository;
+        this.lambdaServiceClient = lambdaServiceClient;
+    }
+
+    public GameService(DynamoDBGameRepository gameRepository) {
     }
 
     public boolean placeBet(String playerId, int betAmount) {
@@ -89,6 +100,14 @@ public class GameService {
     public Game createGame(String gameId) {
         Game game = new Game(gameId);
         gameRepository.save(game);
+        return game;
+    }
+
+    public GameResponse startNewGame(String userId) {
+        GameData dataFromLambda = lambdaServiceClient.setGameData(userId);
+        GameResponse game = new GameResponse();
+        game.setGameId(dataFromLambda.getGameId());
+        game.setPlayerId(dataFromLambda.getPlayerId());
         return game;
     }
 }

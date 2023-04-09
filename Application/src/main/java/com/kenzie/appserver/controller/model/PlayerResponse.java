@@ -23,6 +23,9 @@ public class PlayerResponse {
         this.email = email;
     }
 
+    public PlayerResponse() {
+    }
+
     public String getPlayerId() {
         return playerId;
     }

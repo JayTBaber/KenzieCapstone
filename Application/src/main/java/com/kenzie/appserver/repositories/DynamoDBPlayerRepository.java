@@ -1,6 +1,7 @@
 package com.kenzie.appserver.repositories;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.kenzie.appserver.repositories.model.PlayerRecord;
 import com.kenzie.appserver.service.PlayerService;
 import com.kenzie.appserver.service.model.Player;
 
@@ -38,5 +39,10 @@ public class DynamoDBPlayerRepository implements PlayerRepository {
     @Override
     public List<Player> findAll() {
         return playerService.getAllPlayers();
+    }
+
+    @Override
+    public void save(PlayerRecord capture) {
+
     }
 }

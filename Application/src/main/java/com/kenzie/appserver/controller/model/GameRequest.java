@@ -7,10 +7,11 @@ import javax.validation.constraints.NotEmpty;
 
 public class GameRequest {
 
-    @NotEmpty
-    @JsonProperty("gameId")
-    private String gameId;
+//    @NotEmpty
+//    @JsonProperty("gameId")
+//    private String gameId;
 
+    @NotEmpty
     @JsonProperty("playerId")
     private String playerId;
 
@@ -23,11 +24,11 @@ public class GameRequest {
         this.score = score;
     }
 
-    public String getGameId() {
-        return gameId;
-    }
+//    public String getGameId() {
+//        return gameId;
+//    }
 
-    public void setGameId(String gameId) { this.gameId = gameId; }
+    //public void setGameId(String gameId) { this.gameId = gameId; }
 
     public String getPlayerId() {
         return playerId;
