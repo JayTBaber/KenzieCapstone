@@ -36,10 +36,6 @@ public class ServiceTests {
     @Mock
     private LambdaServiceClient lambdaServiceClient;
     @Mock
-    private ScoreService scoreService;
-    @Mock
-    private ScoreRepository scoreRepository;
-    @Mock
     private CardDAO cardDAO;
     @InjectMocks
     private CardService cardService;
