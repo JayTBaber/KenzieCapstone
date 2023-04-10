@@ -27,8 +27,8 @@ public class PlayerService {
         return (List<Player>) playerRepository.findAll();
     }
 
-    public Optional<Player> getPlayerById(long id) {
-        return Optional.ofNullable(playerRepository.findById(String.valueOf(id)));
+    public Player getPlayerById(String id) {
+        return playerRepository.findById(id);
     }
 
     public Player savePlayer(Player player) {
