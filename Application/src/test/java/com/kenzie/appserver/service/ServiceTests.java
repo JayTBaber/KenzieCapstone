@@ -1,20 +1,26 @@
 package com.kenzie.appserver.service;
 
 import static java.util.UUID.randomUUID;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.kenzie.appserver.config.DynamoDbConfig;
+import com.kenzie.appserver.controller.model.GameResponse;
+import com.kenzie.appserver.repositories.GameRepository;
 import com.kenzie.appserver.repositories.PlayerRepository;
 import com.kenzie.appserver.repositories.model.PlayerRecord;
 import com.kenzie.appserver.service.model.Game;
 import com.kenzie.appserver.service.model.Player;
 import com.kenzie.appserver.service.model.Score;
+import com.kenzie.capstone.service.client.LambdaServiceClient;
+import com.kenzie.capstone.service.model.GameData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,6 +49,12 @@ public class ServiceTests {
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
 
+    @Mock
+    private GameRepository gameRepository;
+
+    @Mock
+    private LambdaServiceClient lambdaServiceClient;
+
     @Value("${dynamodb.Players}")
     private String tableName;
 
@@ -68,129 +80,24 @@ public class ServiceTests {
     public void init() {
         MockitoAnnotations.initMocks(this);
     }
-
     @Test
-    void addNewPlayer() {
-        // GIVEN
-        String playerid = randomUUID().toString();
+    public void testStartNewGame() {
+        String userId = "1234";
+        GameData gameData = new GameData();
+        gameData.setGameId("1234");
+        gameData.setPlayerId(UUID.randomUUID().toString());
 
-        Player player = new Player(playerid, 100);
+        // mock the lambda service client
+        when(lambdaServiceClient.setGameData(userId)).thenReturn(gameData);
 
-        ArgumentCaptor<PlayerRecord> playerRecordCaptor = ArgumentCaptor.forClass(PlayerRecord.class);
+        // call the startNewGame method
+        GameResponse gameResponse = gameService.startNewGame(userId);
 
-        // WHEN
-        Player returnedPlayer = playerService.createPlayer(player);
+        // verify the response
+        Assertions.assertNotNull(gameResponse);
+        assertEquals("1234", gameResponse.getGameId());
 
-        // THEN
-        Assertions.assertNotNull(returnedPlayer);
-
-        verify(playerRepository).save(playerRecordCaptor.capture());
-
-        PlayerRecord record = playerRecordCaptor.getValue();
-
-        Assertions.assertNotNull(record, "The player record is returned");
-        assertEquals(record.getPlayerId(), player.getPlayerId(), "The player id matches");
-        assertEquals(record.getName(), player.getName(), "The player name matches");
+        // verify that the game is saved in the repository
+        verify(gameRepository, times(1)).save(any(Game.class));
     }
-
-//    // Tests for GameService
-//
-//    @Test
-//    public void testGetGameById() {
-//        Game expectedGame = new Game(1, "Chess");
-//        when(gameDao.getGameById(1)).thenReturn(expectedGame);
-//        Game actualGame = gameService.getGameById(1);
-//        assertEquals(expectedGame, actualGame);
-//    }
-//
-//    @Test
-//    public void testGetAllGames() {
-//        List<Game> expectedGames = new ArrayList<>();
-//        expectedGames.add(new Game(1, "Chess"));
-//        expectedGames.add(new Game(2, "Checkers"));
-//        when(gameDao.getAllGames()).thenReturn(expectedGames);
-//        List<Game> actualGames = gameService.getAllGames();
-//        assertEquals(expectedGames, actualGames);
-//    }
-//
-//    @Test
-//    public void testAddGame() {
-//        Game gameToAdd = new Game(1, "Chess");
-//        gameService.addGame(gameToAdd);
-//        verify(gameDao, times(1)).addGame(gameToAdd);
-//    }
-//
-//    // Tests for PlayerService
-//
-//    @Test
-//    public void testGetPlayerById() {
-//        Player expectedPlayer = new Player(1, "John");
-//        when(playerDao.getPlayerById(1)).thenReturn(expectedPlayer);
-//        Player actualPlayer = playerService.getPlayerById(1);
-//        assertEquals(expectedPlayer, actualPlayer);
-//    }
-//
-//    @Test
-//    public void testGetAllPlayers() {
-//        List<Player> expectedPlayers = new ArrayList<>();
-//        expectedPlayers.add(new Player(1, "John"));
-//        expectedPlayers.add(new Player(2, "Jane"));
-//        when(playerDao.getAllPlayers()).thenReturn(expectedPlayers);
-//        List<Player> actualPlayers = playerService.getAllPlayers();
-//        assertEquals(expectedPlayers, actualPlayers);
-//    }
-//
-//    @Test
-//    public void testAddPlayer() {
-//        Player playerToAdd = new Player(1, "John");
-//        playerService.addPlayer(playerToAdd);
-//        verify(playerDao, times(1)).addPlayer(playerToAdd);
-//    }
-//
-//    // Tests for ScoreService
-//
-//    @Test
-//    public void testGetScoreById() {
-//        Score expectedScore = new Score(1, 1, 1, 10);
-//        when(scoreDao.getScoreById(1)).thenReturn(expectedScore);
-//        Score actualScore = scoreService.getScoreById(1);
-//        assertEquals(expectedScore, actualScore);
-//    }
-//
-//    @Test
-//    public void testGetScoresForPlayer() {
-//        List<Score> expectedScores = new ArrayList<>();
-//        expectedScores.add(new Score(1, 1, 1, 10));
-//        expectedScores.add(new Score(2, 1, 2, 20));
-//        when(scoreDao.getScoresForPlayer(1)).thenReturn(expectedScores);
-//        List<Score> actualScores = scoreService.getScoresForPlayer(1);
-//        assertEquals(expectedScores, actualScores);
-//    }
-//
-//    @Test
-//    public void testGetScoresForGame() {
-//        List<Score> expectedScores = new ArrayList<>();
-//        expectedScores.add(new Score(1, 1, 1, 10));
-//        expectedScores.add(new Score(2, 2, 1, 15));
-//        when(scoreDao.getScoresForGame(1)).thenReturn(expectedScores);
-//        List<Score> actualScores = scoreService.getScoresForGame(1);
-//        assertEquals(expectedScores, actualScores);
-//    }
-//
-//    @Test
-//    public void testAddScore() {
-//        Score scoreToAdd = new Score(1, 1, 1, 10);
-//        scoreService.addScore(scoreToAdd);
-//        verify(scoreDao, times(1)).addScore(scoreToAdd);
-//    }
-//
-//    @Test
-//    public void testGetTopScoresForGame() {
-//        List<Score> expectedScores = new ArrayList<>();
-//        expectedScores.add(new Score(1, 1, 1, 10));
-//        expectedScores.add(new Score(2, 2, 1, 15));
-//        when(scoreDao.getTopScoresForGame(1)).thenReturn(expectedScores);
-//        List<Score> actualScores = scoreService.getTopScoresForGame(1);
-//        assertEquals(expectedScores, actualScores);
-//    }
 }

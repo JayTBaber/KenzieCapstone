@@ -108,6 +108,8 @@ public class GameService {
         GameResponse game = new GameResponse();
         game.setGameId(dataFromLambda.getGameId());
         game.setPlayerId(dataFromLambda.getPlayerId());
+        Game newGame = createGame(game.getGameId());
         return game;
     }
+
 }
