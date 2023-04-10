@@ -21,6 +21,12 @@ public class Player {
         this.betAmount = 0;
     }
 
+    public Player(String playerId) {
+        this.playerId = playerId;
+        this.balance = balance;
+        this.name = name;
+    }
+
 
     public String getName() {
         return name;

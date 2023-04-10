@@ -16,17 +16,15 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class GameService {
-
-
     private AmazonDynamoDB amazonDynamoDB;
     private GameRepository gameRepository;
-
     private LambdaServiceClient lambdaServiceClient;
 
     @Autowired
@@ -84,7 +82,7 @@ public class GameService {
     }
 
     @CacheEvict(value = "myCache", allEntries=true)
-    public void deleteGame(Game game) {
+    public void deleteGame(GameData game) {
         gameRepository.delete(game.toString());
     }
 
@@ -111,5 +109,28 @@ public class GameService {
         Game newGame = createGame(game.getGameId());
         return game;
     }
+
+    public List<GameResponse> findAllGames() {
+        List<Game> games = gameRepository.findAll();
+        List<GameResponse> gameResponses = new ArrayList<>();
+        for (Game game : games) {
+            GameResponse gameResponse = new GameResponse();
+            gameResponse.setGameId(game.getGameId());
+            gameResponses.add(gameResponse);
+        }
+        return gameResponses;
+    }
+
+
+//    public GameResponse findGameById(String gameId) {
+//        Game game = gameRepository.findById(gameId)
+//                .orElseThrow(() -> new NotFoundException("Game not found with id: " + gameId));
+//
+//        GameResponse gameResponse = new GameResponse();
+//        gameResponse.setGameId(game.getGameId());
+//        gameResponse.setPlayerId(game.getPlayerId());
+//
+//        return gameResponse;
+//    }
 
 }

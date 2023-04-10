@@ -16,21 +16,15 @@ public class PlayerResponse {
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("balance")
+    private int balance;
 
-    public PlayerResponse(String playerId, String name, String email) {
-        this.playerId = playerId;
-        this.name = name;
-        this.email = email;
-    }
-
-    public PlayerResponse() {
-    }
 
     public String getPlayerId() {
         return playerId;
     }
 
-    public void setPlayerId(String id) {
+    public void setPlayerId(String playerId) {
         this.playerId = playerId;
     }
 
@@ -50,4 +44,11 @@ public class PlayerResponse {
         this.email = email;
     }
 
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
 }

@@ -1,5 +1,8 @@
 package com.kenzie.appserver.controller;
 
+import com.kenzie.appserver.controller.model.GameResponse;
+import com.kenzie.appserver.controller.model.PlayerRequest;
+import com.kenzie.appserver.controller.model.PlayerResponse;
 import com.kenzie.appserver.service.PlayerService;
 import com.kenzie.appserver.service.model.Player;
 import org.springframework.http.HttpStatus;
@@ -36,10 +39,8 @@ public class PlayerController {
     }
 
     @PostMapping
-    public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
-        String playerId = UUID.randomUUID().toString();
-        player.setPlayerId(playerId);
-        playerService.createPlayer(player);
-        return new ResponseEntity<>(player, HttpStatus.CREATED);
+    public ResponseEntity<PlayerResponse> createPlayer(@RequestBody PlayerRequest playerRequest) {
+        PlayerResponse response = playerService.createNewPlayer(playerRequest.getPlayerId());
+        return ResponseEntity.ok(response);
     }
 }
