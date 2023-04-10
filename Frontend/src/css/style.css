@@ -89,7 +89,7 @@
 }
 
 .deal-button {
-    background: #ffa500;
+    background: #00ffbb;
     padding: 3px;
     border-radius: 3px;
     text-decoration: none;
@@ -100,7 +100,7 @@
 }
 
 .deal-button:hover {
-    background: #ff8c00;
+    background: #00ad79;
 }
 
 .hit-button {
@@ -193,6 +193,21 @@
     background: #ff0000;
 }
 
+.new-game-button {
+    background: #00ffc4;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.new-game-button:hover {
+    background: #00b699;
+}
+
 .reset-button {
     background: #c38aff;
     padding: 3px;
@@ -281,4 +296,21 @@ body {
     background-size: cover;
     z-index: 2;
     cursor: pointer;
+}
+
+#overlay span {
+    font-size: 200px;
+    font-style: oblique;
+    font-family: "Marker Felt", monospace;
+    color: #ffdd00;
+    animation: glow 1s ease-in-out infinite alternate;
+    text-shadow: #000000 10px 10px 10px;
+    position: relative;
+    top:30%;
+}
+
+@-webkit-keyframes glow {
+    0%{color: #ffdd00; text-shadow: #fcfcfc 5px 5px 5px;}
+    50%{color: #ff9900; text-shadow: #fcfcfc 3px 3px 3px;}
+    100% {color: #ffdd00; text-shadow: #fcfcfc 5px 5px 5px;}
 }
