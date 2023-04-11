@@ -1,0 +1,118 @@
+:root {
+    /* css variables: https://developer.mozilla.org/en-US/docs/Web/CSS/var */
+    --primary-color: rgba(58, 210, 16, 0);
+    --shawdow-color: #000000 1, 1, 1, 0.5;
+    --secondary-color: #ffc200;
+    --error-color: rgba(194, 0, 0, 0.71);
+}
+
+.background {
+    background-color: #009933;
+    font-size: 25px;
+    padding: 15px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin: 0;
+    counter-reset: section;
+}
+
+.header {
+    /* Flexbox: https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary-color);
+    color: #e1ad01;
+    padding: 20px 50px;
+}
+
+.header_home {
+    font-size: 50px;
+    line-height: 40px;
+    height: 100px;
+    text-decoration: none;
+    color: var(--secondary-color);
+}
+
+.header_nav_link {
+    margin-left: 20px;
+    vertical-align: top;
+    line-height: 40px;
+}
+
+.about {
+    margin-left: 20px;
+}
+
+.button, button {
+    background: #ffcc00;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid black;
+    box-shadow: black 1px 1px 1px;
+    cursor: pointer;
+}
+
+.button:hover, button:hover {
+    background: #ffae00;
+}
+
+.card {
+    color: #e1ad01;
+    background-color: #3e363f;
+    font-size: 20px;
+    border: 4px solid #e1ad01;
+    margin: 50px;
+    padding: 60px 10px;
+}
+
+.validated-field:invalid {
+    outline: 2px solid var(--error-color);
+}
+.validated-field:focus:invalid {
+    color: var(--error-color);
+}
+
+.card-content {
+    max-width: 500px;
+}
+
+.card-content .form-field {
+    display: flex;
+    flex-direction: column;
+}
+
+#concert-list li {
+    margin-bottom: 1rem;
+}
+
+.state {
+    display: none;
+}
+
+.state.active {
+    display: block;
+}
+
+body {
+    text-align: center;
+    color: #ffdd00;
+    text-shadow: #000000 1px 1px 1px;
+}
+
+#overlay {
+    position: fixed;
+    display: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: url("images/coins.gif");
+    background-size: cover;
+    z-index: 2;
+    cursor: pointer;
+}

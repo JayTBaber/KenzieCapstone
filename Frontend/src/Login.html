@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="pages/LoginPage.js"></script>
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" type="text/css" href="css/loginAndHome.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <title>Kenzie 21</title>
+</head>
+<body class ="background">
+<header class="header" id="header">
+    <div class="site-title">
+        <a class="header_home" href="Home.html">Welcome to Kenzie 21!</a>
+    </div>
+</header>
+
+<div class="card">
+    <div class="form-popup" id="loginForm">
+        <form class="form-container">
+            <h1>Login</h1>
+
+            <label for="username"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="username" id="username" required>
+
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" id="password" required>
+            <button onclick="login()" type="button">Login</button>
+        </form>
+    </div>
+</div>
+
+<h2>Or</h2>
+
+<div class="card">
+<div class="form-popup" id="createAccountForm">
+    <form class="form-container">
+        <h1>Create Account</h1>
+
+        <label for="newUsername"><b>Username</b></label>
+        <input type="text" placeholder="Desired Username" name="newUsername" id="newUsername" required>
+        <label for="newPassword"><b>Password</b></label>
+        <input type="password" placeholder="Desired Password" name="newPassword" id="newPassword" required>
+        <label for="passwordVerify"><b>Verify Password</b></label>
+        <input type="password" placeholder="Enter Password Again" name="passwordVerify" id="passwordVerify" required>
+
+        <button onclick="createAccount()" type="button" class="btn">Create Account</button>
+    </form>
+</div>
+</div>
+
+<script>
+    function login() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        if (username !== "" && password !== "") {
+            window.location.href = 'Home.html';
+        }
+    }
+
+    function createAccount() {
+        var newUsername = document.getElementById('newUsername').value;
+        var newPassword = document.getElementById('newPassword').value;
+        var passwordVerify = document.getElementById('passwordVerify').value;
+
+        if (newUsername !== "" && newPassword !== "" && passwordVerify !== "") {
+            window.location.href = 'Home.html';
+        }
+    }
+</script>
+</body>
+</html>
