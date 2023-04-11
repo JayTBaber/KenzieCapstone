@@ -1,11 +1,13 @@
 package com.kenzie.appserver.service;
 
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+
+import java.util.*;
+
 import com.kenzie.appserver.controller.model.GameResponse;
 import com.kenzie.appserver.controller.model.PlayerResponse;
 import com.kenzie.appserver.dao.CardDAO;
@@ -14,9 +16,9 @@ import com.kenzie.appserver.enums.Suit;
 import com.kenzie.appserver.repositories.GameRepository;
 import com.kenzie.appserver.repositories.PlayerRepository;
 import com.kenzie.appserver.repositories.ScoreRepository;
-import com.kenzie.appserver.service.model.Card;
-import com.kenzie.appserver.service.model.Game;
-import com.kenzie.appserver.service.model.Player;
+import com.kenzie.appserver.repositories.UserRepository;
+import com.kenzie.appserver.repositories.model.UserRecord;
+import com.kenzie.appserver.service.model.*;
 import com.kenzie.capstone.service.client.LambdaServiceClient;
 import com.kenzie.capstone.service.model.GameData;
 import com.kenzie.capstone.service.model.PlayerData;
@@ -34,11 +36,19 @@ public class ServiceTests {
     @Mock
     private PlayerRepository playerRepository;
     @Mock
+    private UserRepository userRepository;
+    @Mock
+    private ScoreRepository scoreRepository;
+    @InjectMocks
+    private ScoreService scoreService;
+    @Mock
     private LambdaServiceClient lambdaServiceClient;
     @Mock
     private CardDAO cardDAO;
     @InjectMocks
     private CardService cardService;
+    @InjectMocks
+    private UserService userService;
     @InjectMocks
     private GameService gameService;
     @InjectMocks
@@ -46,6 +56,7 @@ public class ServiceTests {
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
+
     }
     @Test
     public void testStartNewGame() {
@@ -178,4 +189,156 @@ public class ServiceTests {
 
         verify(cardDAO).delete(card);
     }
+    @Test
+    public void testGetCardById() throws EntityNotFoundException {
+        Card card = new Card(Suit.HEARTS, Rank.ACE);
+        when(cardDAO.findById(1L)).thenReturn(card);
+
+        Card result = cardService.getCardById(1L);
+
+        assertEquals(card, result);
+    }
+
+
+    @Test
+    public void testUpdateNonExistingUser() {
+        User user = new User("nonExistingUser", "password", 500, 7, 4);
+
+        when(userRepository.existsById("nonExistingUser")).thenReturn(false);
+
+        User result = userService.updateExistingUser(user);
+
+        assertNull(result);
+
+        verify(userRepository, never()).save(any(UserRecord.class));
+    }
+
+    @Test
+    void testEntityNotFoundException() {
+        String message = null;
+        EntityNotFoundException exception = new EntityNotFoundException(message);
+
+        assertEquals(null, exception.getMessage());
+    }
+
+    @Test
+    public void testGetAllScores() {
+        Score score1 = new Score(1, 100);
+        Score score2 = new Score(2, 200);
+        List<Score> scores = Arrays.asList(score1, score2);
+
+        when(scoreRepository.findAll()).thenReturn(scores);
+
+        List<Score> result = scoreService.getAllScores();
+
+        assertEquals(scores, result);
+
+        verify(scoreRepository).findAll();
+    }
+
+    @Test
+    public void testGetScoreById() {
+        Score score = new Score(1, 100);
+
+        when(scoreRepository.findById("1")).thenReturn(score);
+
+        Optional<Score> result = scoreService.getScoreById(1);
+
+        assertEquals(Optional.of(score), result);
+
+        verify(scoreRepository).findById("1");
+    }
+
+    @Test
+    public void testUpdateScoreById() {
+        long id = 1;
+        Score score = new Score(1, 150);
+
+        Optional<Score> scoreOptional = Optional.of(score);
+
+        when(scoreRepository.findById(String.valueOf(id))).thenReturn(scoreOptional.get());
+        when(scoreRepository.save(any(Score.class))).thenReturn(score);
+
+        scoreService.updateScoreById(id, score);
+
+        verify(scoreRepository, times(1)).findById(String.valueOf(id));
+        verify(scoreRepository, times(1)).save(any(Score.class));
+    }
+
+    @Test
+    public void testAddScore() {
+        Score score = new Score(1, 100);
+
+        scoreService.addScore(score);
+
+        verify(scoreRepository).save(score);
+    }
+
+    @Test
+    public void testDeleteScoreById() {
+        long id = 1;
+
+        doNothing().when(scoreRepository).deleteById(id);
+
+        scoreService.deleteScoreById(id);
+
+        verify(scoreRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    public void getUserByUserName_shouldReturnNull_whenUserDoesNotExist() {
+        String username = "johndoe";
+        when(userRepository.findById(username)).thenReturn(Optional.empty());
+
+        User result = userService.getUserByUserName(username);
+
+        assertNull(result);
+    }
+
+    @Test
+    public void updateExistingUser_shouldReturnNull_whenUserDoesNotExist() {
+        String username = "johndoe";
+        User user = new User(username, "newpassword", 200, 20, 10);
+        when(userRepository.existsById(username)).thenReturn(false);
+
+        User result = userService.updateExistingUser(user);
+
+        assertNull(result);
+        verify(userRepository, never()).save(any(UserRecord.class));
+    }
+
+    @Test
+    public void testAddNewUser() {
+        String username = "testUser";
+        User user = new User(username, "password", 100, 0, 0);
+
+        User newUser = userService.addNewUser(user);
+
+        Assertions.assertNotNull(newUser);
+        assertEquals(newUser.getUserName(), username);
+        assertEquals(newUser.getPassword(), "password");
+        assertEquals(newUser.getPurse(), 100);
+        assertEquals(newUser.getWins(), 0);
+        assertEquals(newUser.getLosses(), 0);
+    }
+
+    @Test
+    public void testAddExistingUser() {
+        String username = "testUser";
+        UserRecord userRecord = new UserRecord();
+        userRecord.setUsername(username);
+        userRecord.setPassword("password");
+        userRecord.setPurse(100);
+        userRecord.setWins(0);
+        userRecord.setLosses(0);
+        userRepository.save(userRecord);
+
+        User user = new User(username, "password", 100, 0, 0);
+
+        User newUser = userService.addNewUser(user);
+
+        Assertions.assertNull(null);
+    }
+
+
 }

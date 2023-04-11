@@ -28,45 +28,45 @@ public class GameController {
         return new ResponseEntity<>(games, HttpStatus.OK);
     }
 
-    @GetMapping("/{gameId}")
-    public ResponseEntity<Optional<Game>> getGameById(@PathVariable int gameId) {
-        Optional<Game> game = gameService.getGameById(gameId);
-        if (game.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(game, HttpStatus.OK);
-        }
-    }
+//    @GetMapping("/{gameId}")
+//    public ResponseEntity<Optional<Game>> getGameById(@PathVariable int gameId) {
+//        Optional<Game> game = gameService.getGameById(gameId);
+//        if (game.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        } else {
+//            return new ResponseEntity<>(game, HttpStatus.OK);
+//        }
+//    }
 
-    @PostMapping
-    public ResponseEntity<Game> createGame(@RequestBody List<Player> playerNames) {
-        Game game = gameService.createGame(playerNames);
-        return new ResponseEntity<>(game, HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity<Game> createGame(@RequestBody List<Player> playerNames) {
+//        Game game = gameService.createGame(playerNames);
+//        return new ResponseEntity<>(game, HttpStatus.CREATED);
+//    }
+//
+//    @PostMapping("/place-bet")
+//    public ResponseEntity<PlaceBetResponse> placeBet(@RequestBody PlaceBetRequest request) {
+//        boolean betPlaced = gameService.placeBet(request.getPlayerId(), request.getBetAmount());
+//        String message = betPlaced ? "Bet placed successfully." : "Bet placement failed.";
+//        PlaceBetResponse response = new PlaceBetResponse(betPlaced, message);
+//        return ResponseEntity.ok(response);
+//    }
+//
+//    @PostMapping("/hit")
+//    public ResponseEntity<HitResponse> hit(@RequestBody HitRequest request) {
+//        Card cardDealt = gameService.hit(request.getPlayerId());
+//        String message = "Card dealt: " + cardDealt.toString();
+//        HitResponse response = new HitResponse(cardDealt, message);
+//        return ResponseEntity.ok(response);
+//    }
 
-    @PostMapping("/place-bet")
-    public ResponseEntity<PlaceBetResponse> placeBet(@RequestBody PlaceBetRequest request) {
-        boolean betPlaced = gameService.placeBet(request.getPlayerId(), request.getBetAmount());
-        String message = betPlaced ? "Bet placed successfully." : "Bet placement failed.";
-        PlaceBetResponse response = new PlaceBetResponse(betPlaced, message);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/hit")
-    public ResponseEntity<HitResponse> hit(@RequestBody HitRequest request) {
-        Card cardDealt = gameService.hit(request.getPlayerId());
-        String message = "Card dealt: " + cardDealt.toString();
-        HitResponse response = new HitResponse(cardDealt, message);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/stand")
-    public ResponseEntity<StandResponse> stand(@RequestBody StandRequest request) {
-        gameService.stand(request.getPlayerId());
-        String message = "Player stood.";
-        StandResponse response = new StandResponse(message);
-        return ResponseEntity.ok(response);
-    }
+//    @PostMapping("/stand")
+//    public ResponseEntity<StandResponse> stand(@RequestBody StandRequest request) {
+//        gameService.stand(request.getPlayerId());
+//        String message = "Player stood.";
+//        StandResponse response = new StandResponse(message);
+//        return ResponseEntity.ok(response);
+//    }
 
     @PostMapping
     public ResponseEntity<Game> createGame(@RequestBody Game game) {
