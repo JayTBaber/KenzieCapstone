@@ -28,7 +28,9 @@ public class UserController {
     private PlayerResponse playerResponse;
     private UserRecord userRecord;
 
-    public UserController(UserService userService) {this.userService = userService;}
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
 
     @GetMapping("/users/{username}")
@@ -64,7 +66,7 @@ public class UserController {
 
 
     @PutMapping
-    public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest){
+    public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest) {
 
         User user = userService.getUserByUserName(userRecord.getUsername());
 
@@ -74,7 +76,7 @@ public class UserController {
 
         DealerResponse dealerResponse = new DealerResponse();
         Dealer dealer = new Dealer();
-        UserResponse userResponse  = new UserResponse();
+        UserResponse userResponse = new UserResponse();
 
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -85,22 +87,22 @@ public class UserController {
             } else if (dealer.getTotalPoints() == 21) {
                 updateUserRequest.setLosses(String.valueOf(user.getLosses() + 1));
                 updateUserRequest.setPurse(String.valueOf(user.getPurse() - player.getBetAmount()));
-            }else if (dealerResponse.isBusted()) {
+            } else if (dealerResponse.isBusted()) {
                 updateUserRequest.setWins(String.valueOf(user.getWins() + 1));
                 updateUserRequest.setPurse(String.valueOf(user.getPurse() + player.getBetAmount()));
             } else if (player.getTotalPoints() == 21) {
                 updateUserRequest.setWins(String.valueOf(user.getWins() + 1));
                 updateUserRequest.setPurse(String.valueOf(user.getPurse() + player.getBetAmount()));
-            } else if (player.isStanding() && player.getTotalPoints() > dealer.getTotalPoints() && dealer.) {
-
+//            } else if (player.isStanding() && player.getTotalPoints() > dealer.getTotalPoints() && dealer.) {
+//
+//            }
             }
+            return ResponseEntity.ok(userResponse);
         }
-
-        return ResponseEntity.ok(userResponse);
+        //make a new request to handle updated values for users (purse, wins, losses)
+        //grab old record of User
+        //make a new user with values set to old values plus the new values
+        //send the update request to the userservice
+        //return a userresponse for the updated user
     }
-    //make a new request to handle updated values for users (purse, wins, losses)
-    //grab old record of User
-    //make a new user with values set to old values plus the new values
-    //send the update request to the userservice
-    //return a userresponse for the updated user
 }
