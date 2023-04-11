@@ -65,6 +65,7 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest){
+
         User user = userService.getUserByUserName(userRecord.getUsername());
 
         PlayerResponse playerResponse1 = new PlayerResponse();
@@ -79,11 +80,19 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             if (player.isBusted()) {
-                userResponse.setLosses(user.getLosses() + 1);
-                userResponse.setPurse(user.getPurse() - player.getBetAmount());
-            } else if (dealerResponse.isBusted()) {
-                userResponse.setWins(user.getWins() + 1);
-                userResponse.setPurse(user.getPurse() + player.getBetAmount());
+                updateUserRequest.setLosses(String.valueOf(user.getLosses() + 1));
+                updateUserRequest.setPurse(String.valueOf(user.getPurse() - player.getBetAmount()));
+            } else if (dealer.getTotalPoints() == 21) {
+                updateUserRequest.setLosses(String.valueOf(user.getLosses() + 1));
+                updateUserRequest.setPurse(String.valueOf(user.getPurse() - player.getBetAmount()));
+            }else if (dealerResponse.isBusted()) {
+                updateUserRequest.setWins(String.valueOf(user.getWins() + 1));
+                updateUserRequest.setPurse(String.valueOf(user.getPurse() + player.getBetAmount()));
+            } else if (player.getTotalPoints() == 21) {
+                updateUserRequest.setWins(String.valueOf(user.getWins() + 1));
+                updateUserRequest.setPurse(String.valueOf(user.getPurse() + player.getBetAmount()));
+            } else if (player.isStanding() && player.getTotalPoints() > dealer.getTotalPoints() && dealer.) {
+
             }
         }
 
