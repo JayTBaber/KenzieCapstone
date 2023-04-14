@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.kenzie.appserver.controller.model.GameResponse;
 import com.kenzie.appserver.repositories.DynamoDBGameRepository;
 import com.kenzie.appserver.repositories.GameRepository;
+import com.kenzie.appserver.repositories.model.GameRecord;
 import com.kenzie.appserver.service.model.Card;
 import com.kenzie.appserver.service.model.Game;
 import com.kenzie.appserver.service.model.Player;
@@ -70,17 +71,22 @@ public class GameService {
 
     @Cacheable("myCache")
     public List<Game> getAllGames() {
-        return (List<Game>) gameRepository.findAll();
+        List<Game> games = new ArrayList<>();
+        Iterable<GameRecord> records = gameRepository.findAll();
+
+        for (GameRecord record : records) {
+            Game game = new Game(record.getGameId(), record.getPlayerId());
+            games.add(game);
+        }
+        return games;
     }
 
-    public Optional<Game> getGameById(long id) {
-        return Optional.ofNullable(gameRepository.findById(String.valueOf(id)));
-    }
+
 
 
     @CacheEvict(value = "myCache", allEntries=true)
     public void deleteGame(GameData game) {
-        gameRepository.delete(game.toString());
+        gameRepository.deleteById(game.getGameId());
     }
 
 //    public Game createGame(List<Player> playerNames) {
@@ -93,9 +99,10 @@ public class GameService {
 //    }
 
     public Game createGame(String gameId) {
-        Game game = new Game(gameId);
-        gameRepository.save(game);
-        return game;
+        GameRecord record = new GameRecord();
+        record.setGameId(gameId);
+        gameRepository.save(record);
+        return new Game(gameId);
     }
 
     public GameResponse startNewGame(String userId) {
@@ -106,28 +113,4 @@ public class GameService {
         Game newGame = createGame(game.getGameId());
         return game;
     }
-
-    public List<GameResponse> findAllGames() {
-        List<Game> games = gameRepository.findAll();
-        List<GameResponse> gameResponses = new ArrayList<>();
-        for (Game game : games) {
-            GameResponse gameResponse = new GameResponse();
-            gameResponse.setGameId(game.getGameId());
-            gameResponses.add(gameResponse);
-        }
-        return gameResponses;
-    }
-
-
-//    public GameResponse findGameById(String gameId) {
-//        Game game = gameRepository.findById(gameId)
-//                .orElseThrow(() -> new NotFoundException("Game not found with id: " + gameId));
-//
-//        GameResponse gameResponse = new GameResponse();
-//        gameResponse.setGameId(game.getGameId());
-//        gameResponse.setPlayerId(game.getPlayerId());
-//
-//        return gameResponse;
-//    }
-
 }

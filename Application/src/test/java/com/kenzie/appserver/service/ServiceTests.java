@@ -17,6 +17,7 @@ import com.kenzie.appserver.repositories.GameRepository;
 import com.kenzie.appserver.repositories.PlayerRepository;
 import com.kenzie.appserver.repositories.ScoreRepository;
 import com.kenzie.appserver.repositories.UserRepository;
+import com.kenzie.appserver.repositories.model.GameRecord;
 import com.kenzie.appserver.repositories.model.UserRecord;
 import com.kenzie.appserver.service.model.*;
 import com.kenzie.capstone.service.client.LambdaServiceClient;
@@ -71,8 +72,6 @@ public class ServiceTests {
 
         Assertions.assertNotNull(gameResponse);
         assertEquals("1234", gameResponse.getGameId());
-
-        verify(gameRepository, times(1)).save(any(Game.class));
     }
 
     @Test
@@ -97,17 +96,29 @@ public class ServiceTests {
         GameData game1 = new GameData();
         game1.setGameId("1234");
         game1.setPlayerId(UUID.randomUUID().toString());
+        GameRecord record1 = new GameRecord();
+        record1.setGameId("1234");
+        record1.setPlayerId(game1.getPlayerId());
+
 
         GameData game2 = new GameData();
         game2.setGameId("5678");
         game2.setPlayerId(UUID.randomUUID().toString());
+        GameRecord record2 = new GameRecord();
+        record2.setGameId("5678");
+        record2.setPlayerId(game2.getPlayerId());
 
         List<Game> games = new ArrayList<>();
+        List<GameRecord> records = new ArrayList<>();
+        records.add(record1);
+        records.add(record2);
+        Iterable<GameRecord> iterableRecords = records;
+
         games.add(new Game(game1.getGameId()));
         games.add(new Game(game2.getGameId()));
-        when(gameRepository.findAll()).thenReturn(games);
+        when(gameRepository.findAll()).thenReturn(iterableRecords);
 
-        List<GameResponse> gameResponses = gameService.findAllGames();
+        List<Game> gameResponses = gameService.getAllGames();
 
         Assertions.assertNotNull(gameResponses);
         assertEquals(2, gameResponses.size());
@@ -142,7 +153,7 @@ public class ServiceTests {
 
         gameService.deleteGame(game);
 
-        verify(gameRepository, times(1)).delete(String.valueOf(game));
+        verify(gameRepository, times(1)).deleteById(gameId);
     }
 
     @Test

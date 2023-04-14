@@ -58,9 +58,9 @@ class GameControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(gameRequest)))
-                .andExpect(jsonPath("id")
+                .andExpect(jsonPath("gameId")
                         .exists())
-                .andExpect(jsonPath("name")
+                .andExpect(jsonPath("playerId")
                         .value(is(name)))
                 .andExpect(status().is2xxSuccessful());
     }

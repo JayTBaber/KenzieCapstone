@@ -14,30 +14,28 @@ import java.util.List;
 import java.util.Optional;
 
 
-@Repository
-public class DynamoDBGameRepository implements GameRepository {
+
+public class DynamoDBGameRepository {
 
     private final DynamoDBMapper mapper;
 
-    private final GameService gameService;
 
-    public DynamoDBGameRepository(DynamoDBMapper mapper, GameService gameService) {
+
+    public DynamoDBGameRepository(DynamoDBMapper mapper) {
         this.mapper = mapper;
-        this.gameService = gameService;
+
     }
 
-    @Override
     public Game save(Game game) {
         mapper.save(game);
         return game;
     }
 
-    @Override
     public Game findById(String id) {
         return mapper.load(Game.class, id);
     }
 
-    @Override
+
     public Game findByPlayerId(String playerId) {
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
         scanExpression.addFilterCondition("playerId", new Condition()
@@ -50,14 +48,13 @@ public class DynamoDBGameRepository implements GameRepository {
         return scanResult.get(0);
     }
 
-    @Override
+
     public void delete(String id) {
-        Optional<Game> game = gameService.getGameById(Long.parseLong(id));
-        mapper.delete(game.get());
+
     }
 
-    @Override
+
     public List<Game> findAll() {
-        return gameService.getAllGames();
+        return null;
     }
 }
