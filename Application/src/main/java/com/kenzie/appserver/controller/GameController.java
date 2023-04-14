@@ -68,7 +68,7 @@ public class GameController {
 //        return ResponseEntity.ok(response);
 //    }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Game> createGame(@RequestBody Game game) {
         String gameId = UUID.randomUUID().toString();
         game.getGameId();
