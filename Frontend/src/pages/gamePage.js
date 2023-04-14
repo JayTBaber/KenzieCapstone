@@ -4,7 +4,11 @@ let hiddenCard;
 
 let playerTotal = 0;
 let playerAce = 0;
+
 let purse = window.localStorage.getItem('purse');
+let wins = window.localStorage.getItem('wins');
+let losses = window.localStorage.getItem('losses');
+
 let wager = 0;
 
 let deck;
@@ -104,8 +108,11 @@ function gameStart() {
         canHit = false;
         message = "Kenzie 21! You win!";
         purse += wager * 2.5;
+        wins++;
         document.getElementById("purse").innerText = purse;
+        document.getElementById("wins").innerText = wins;
         window.localStorage.setItem('purse', purse);
+        window.localStorage.setItem('wins', wins);
         winMoney.play();
         win21.play();
         document.getElementById("overlay").style.display = "block";
@@ -193,6 +200,9 @@ function hit() {
         if (purse === 0) {
             message = "You busted! You lose! Click 'Play Again' to play again, or 'Quit' to end the game.";
         }
+        losses++;
+        document.getElementById("losses").innerText = losses;
+        window.localStorage.setItem('losses', losses);
         bust.play();
         endGame();
     }
@@ -264,8 +274,11 @@ function reduceAce(total, ace) {
 }
 
 function bet() {
-    if (window.localStorage.getItem('purse') === '0' || window.localStorage.getItem('purse') === null) {
+    if (window.localStorage.getItem('purse') === '0' || window.localStorage.getItem('purse') === null ||
+        window.localStorage.getItem('wins') === null || window.localStorage.getItem('losses') === null) {
         window.localStorage.setItem('purse', '100');
+        window.localStorage.setItem('wins', '0');
+        window.localStorage.setItem('losses', '0');
     }
     document.getElementById("hiddenCard").style.display = "none";
 
@@ -304,6 +317,12 @@ function bet() {
         }
         document.getElementById('results').innerText = message;
     });
+
+    document.getElementById("wins").innerText = window.localStorage.getItem('wins');
+    wins = parseInt(window.localStorage.getItem('wins'));
+
+    document.getElementById("losses").innerText = window.localStorage.getItem('losses');
+    losses = parseInt(window.localStorage.getItem('losses'));
 }
 
 function gameResult() {
@@ -311,8 +330,11 @@ function gameResult() {
         message = "Dealer busted! You win! Click 'Play Again' to play again, " +
             "'Change Wager' to change your wager, or 'Quit' to end the game.";
         purse += wager * 2;
+        wins++;
         document.getElementById("purse").innerText = purse;
+        document.getElementById("wins").innerText = wins;
         window.localStorage.setItem('purse', purse);
+        window.localStorage.setItem('wins', wins);
         winMoney.play();
         winHand.play();
         endGame();
@@ -323,14 +345,20 @@ function gameResult() {
             message = "Dealer has a higher hand! You lose! " +
                 "Click 'Play Again' to play again, or 'Quit' to end the game.";
         }
+        losses++;
+        document.getElementById("losses").innerText = losses;
+        window.localStorage.setItem('losses', losses);
         loseHand.play();
         endGame();
     } else if (dealerTotal < playerTotal) {
         message = "You have a higher hand! You win! " +
             "Click 'Play Again' to play again, 'Change Wager' to change your wager, or 'Quit' to end the game.";
         purse += wager * 2;
+        wins++;
         document.getElementById("purse").innerText = purse;
+        document.getElementById("wins").innerText = wins;
         window.localStorage.setItem('purse', purse);
+        window.localStorage.setItem('wins', wins);
         winMoney.play();
         winHand.play();
         endGame();
@@ -457,6 +485,8 @@ function quit() {
     document.getElementById("player-hand").innerText = "";
     document.getElementById("dealer-hand").innerText = "";
     document.getElementById("purse").innerText = purse;
+    document.getElementById("wins").innerText = wins;
+    document.getElementById("losses").innerText = losses;
     window.localStorage.setItem('purse', purse);
     document.getElementById("wager").innerText = "";
     document.getElementById("playerTotal").innerText = "";

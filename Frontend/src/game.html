@@ -32,13 +32,20 @@
 <div id="dealer-hand">
   <img id= "hiddenCard" src="css/cards/cardBack.png" alt="card-back">
 </div>
-<h2>Wager: <span id="wager">
+<h2>Wager: $<span id="wager">
 <label for="wagerInput"></label><input type="number" id="wagerInput" name="wager">
     <button id="bet" class="bet-button">Place Bet</button>
 </span></h2>
-<h2>Purse: <span id="purse"></span></h2>
 <h2>Player: <span id="playerTotal"></span></h2>
 <div id="player-hand">
+</div>
+
+<div id="player-stats">
+  <div id="stats">
+    <h2>Purse: $<span id="purse"></span></h2>
+    <h3>Wins: <span id="wins"></span></h3>
+    <h3>Losses: <span id="losses"></span></h3>
+  </div>
 </div>
 
 <button id="deal" class="deal-button">Deal</button>
@@ -56,7 +63,7 @@
 <p id="results"></p>
 
 <audio id="audio" src="css/sounds/music.mp3" loop></audio>
-<div id="overlay" onclick="overlayOff()"></div>
+<div id="overlay" onclick="overlayOff()"><span>KENZIE 21!</span></div>
 
 </body>
 </html>

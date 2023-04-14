@@ -8,11 +8,13 @@ module.exports = {
     usedExports: true
   },
   entry: {
-    gamePage: path.resolve(__dirname, 'src', 'pages', 'loginPage.js'),
+    loginPage: path.resolve(__dirname, 'src', 'pages', 'loginPage.js'),
+    gamePage: path.resolve(__dirname, 'src', 'pages', 'gamePage.js'),
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
+    publicPath: '/',
   },
   devServer: {
     https: false,
@@ -21,7 +23,7 @@ module.exports = {
     openPage: 'http://localhost:8080',
     // disableHostChecks, otherwise we get an error about headers and the page won't render
     disableHostCheck: true,
-    contentBase: 'packaging_additional_published_artifacts',
+    contentBase: [path.join(__dirname, 'packaging_additional_published_artifacts'), path.join(__dirname, 'dist')],
     // overlay shows a full-screen overlay in the browser when there are compiler errors or warnings
     overlay: true,
     proxy: [
@@ -37,7 +39,14 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
-      inject: false
+      inject: false,
+      chunks: ['loginPage']
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/game.html',
+      filename: 'game.html',
+      inject: false,
+      chunks: ['gamePage']
     }),
     new CopyPlugin({
       patterns: [
