@@ -66,41 +66,17 @@ public class UserController {
     @PutMapping
     public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest){
 
-        User user = userService.getUserByUserName(userRecord.getUsername());
+        User user = userService.getUserByUserName(updateUserRequest.getUsername());
+        User updatedUser = new User(user.getUserName(), user.getPassword(), user.getPurse() + updateUserRequest.getPurse(), user.getWins() + updateUserRequest.getWins(), user.getLosses() + updateUserRequest.getLosses());
 
-        PlayerResponse playerResponse1 = new PlayerResponse();
-        String playerId = playerResponse1.getPlayerId();
-        Player player = playerService.getPlayerById(playerId);
+        userService.updateExistingUser(updatedUser);
 
-        DealerResponse dealerResponse = new DealerResponse();
-        Dealer dealer = new Dealer();
-        UserResponse userResponse  = new UserResponse();
-
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            if (player.isBusted()) {
-                updateUserRequest.setLosses(String.valueOf(user.getLosses() + 1));
-                updateUserRequest.setPurse(String.valueOf(user.getPurse() - player.getBetAmount()));
-            } else if (dealer.getTotalPoints() == 21) {
-                updateUserRequest.setLosses(String.valueOf(user.getLosses() + 1));
-                updateUserRequest.setPurse(String.valueOf(user.getPurse() - player.getBetAmount()));
-            }else if (dealerResponse.isBusted()) {
-                updateUserRequest.setWins(String.valueOf(user.getWins() + 1));
-                updateUserRequest.setPurse(String.valueOf(user.getPurse() + player.getBetAmount()));
-            } else if (player.getTotalPoints() == 21) {
-                updateUserRequest.setWins(String.valueOf(user.getWins() + 1));
-                updateUserRequest.setPurse(String.valueOf(user.getPurse() + player.getBetAmount()));
-            } else if (player.isStanding() && player.getTotalPoints() > dealer.getTotalPoints() && dealer.) {
-
-            }
-        }
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUsername(updatedUser.getUserName());
+        userResponse.setPurse(updatedUser.getPurse());
+        userResponse.setWins(updatedUser.getWins());
+        userResponse.setLosses(updatedUser.getLosses());
 
         return ResponseEntity.ok(userResponse);
     }
-    //make a new request to handle updated values for users (purse, wins, losses)
-    //grab old record of User
-    //make a new user with values set to old values plus the new values
-    //send the update request to the userservice
-    //return a userresponse for the updated user
 }
