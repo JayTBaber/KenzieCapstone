@@ -13,21 +13,25 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableDynamoDBRepositories(basePackages = "com.kenzie.appserver.repositories")
 public class DynamoDbConfig {
+    @Value("${dynamodb.override_endpoint}")
+    String dynamoOverrideEndpoint;
 
-    @Value("false")
-    private boolean dynamoOverrideEndpoint;
+    @Bean
+    @ConditionalOnProperty(name = "dynamodb.override_endpoint", havingValue = "true")
+    public AmazonDynamoDB amazonDynamoDB(@Value("${dynamodb.endpoint}") String dynamoEndpoint) {
+        AwsClientBuilder.EndpointConfiguration endpointConfig = new
+                AwsClientBuilder.EndpointConfiguration(dynamoEndpoint,
+                "us-east-1");
 
-    @Value("${dynamodb.endpoint}")
-    private String dynamoEndpoint;
+        return AmazonDynamoDBClientBuilder
+                .standard()
+                .withEndpointConfiguration(endpointConfig)
+                .build();
+    }
 
-    @Bean(name = "dynamoDBMapper")
-    public DynamoDBMapper dynamoDBMapper() {
-        AmazonDynamoDBClientBuilder builder = AmazonDynamoDBClientBuilder.standard();
-        if (dynamoOverrideEndpoint) {
-            AwsClientBuilder.EndpointConfiguration endpointConfig = new AwsClientBuilder.EndpointConfiguration(dynamoEndpoint, "us-east-1");
-            builder.withEndpointConfiguration(endpointConfig);
-        }
-        return new DynamoDBMapper(builder.build());
+    @Bean(name = "amazonDynamoDB")
+    public AmazonDynamoDB defaultAmazonDynamoDb() {
+        return AmazonDynamoDBClientBuilder.defaultClient();
     }
 
 }
