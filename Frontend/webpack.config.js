@@ -8,7 +8,7 @@ module.exports = {
     usedExports: true
   },
   entry: {
-    gamePage: path.resolve(__dirname, 'src', 'pages', 'gamePage.js'),
+    gamePage: path.resolve(__dirname, 'src', 'pages', 'loginPage.js'),
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -27,7 +27,7 @@ module.exports = {
     proxy: [
       {
         context: [
-          '/game',
+          '/login',
         ],
         target: 'http://localhost:5001'
       }

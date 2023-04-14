@@ -28,14 +28,13 @@ public class UserService {
         if (userRecord == null) {
             return null;
         } else {
-            User user = new User(
+
+            return new User(
                     userRecord.getUsername(),
                     userRecord.getPassword(),
                     userRecord.getPurse(),
                     userRecord.getWins(),
                     userRecord.getLosses());
-
-            return user;
         }
     }
 

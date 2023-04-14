@@ -13,17 +13,17 @@ public class UpdateUserRequest {
 
     @NotEmpty
     @JsonProperty("purse")
-    private String purse;
+    private int purse;
 
     @NotEmpty
     @JsonProperty("wins")
-    private String wins;
+    private int wins;
 
     @NotEmpty
     @JsonProperty("losses")
-    private String losses;
+    private int losses;
 
-    public UpdateUserRequest(String username, String purse, String wins, String losses) {
+    public UpdateUserRequest(String username, int purse, int wins, int losses) {
         this.username = username;
         this.purse = purse;
         this.wins = wins;
@@ -38,27 +38,27 @@ public class UpdateUserRequest {
         this.username = username;
     }
 
-    public String getPurse() {
+    public int getPurse() {
         return purse;
     }
 
-    public void setPurse(String purse) {
+    public void setPurse(int purse) {
         this.purse = purse;
     }
 
-    public String getWins() {
+    public int getWins() {
         return wins;
     }
 
-    public void setWins(String wins) {
+    public void setWins(int wins) {
         this.wins = wins;
     }
 
-    public String getLosses() {
+    public int getLosses() {
         return losses;
     }
 
-    public void setLosses(String losses) {
+    public void setLosses(int losses) {
         this.losses = losses;
     }
 }
