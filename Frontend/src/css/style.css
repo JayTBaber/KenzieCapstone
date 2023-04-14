@@ -270,7 +270,6 @@ body {
     margin: 1px;
 }
 
-
 #dealer-hand img {
     height: 200px;
     width: 140px;
@@ -281,6 +280,14 @@ body {
     height: 200px;
     width: 140px;
     margin: 1px;
+}
+
+#player-stats {
+    position: fixed;
+    top: 40%;
+    left: 85%;
+    color: rgb(255, 204, 0);
+    text-shadow: #000000 1px 1px 1px;
 }
 
 #overlay {
