@@ -41,6 +41,7 @@ function buildDeck() {
             }
         }
     }
+    console.log("cards in deck: " + deck.length);
 }
 
 function shuffleDeck() {
@@ -118,17 +119,32 @@ function gameStart() {
     }
 
     if ((playerTotal === 10 || playerTotal === 11) && purse >= wager) {
-        message = "You can double down! Click 'Double Down' to double your wager and get one more card.";
         document.getElementById("double").style.display = "inline";
         document.getElementById("double").addEventListener("click", doubleDown);
     }
 
     if (playerTotal < 21) {
         canHit = true;
-        message = "Click 'Hit' to get another card or 'Stand' to keep your current hand.";
+        if ((playerTotal === 10 || playerTotal === 11) && purse >= wager) {
+            message = "Click 'Hit' to get another card or 'Stand' to keep your current hand. " +
+                "You can double down! Click 'Double Down' to double your wager and get one more card.";
+        } else {
+            message = "Click 'Hit' to get another card or 'Stand' to keep your current hand.";
+        }
     }
+
+    document.getElementById("hit").addEventListener("click", function() {
+        document.getElementById("double").style.display = "none";
+    });
+
+    document.getElementById("stand").addEventListener("click", function() {
+        document.getElementById("double").style.display = "none";
+    });
+
+    console.log("cards in deck: " + deck.length);
     document.getElementById('results').innerText = message;
 }
+
 function getCardValue(card) {
     let value = card.split('_')[0];
     if (isNaN(value)) {
@@ -188,11 +204,12 @@ function hit() {
 
     console.log(card);
     console.log(playerTotal);
+    console.log("cards in deck: " + deck.length);
+
 
     document.getElementById('playerTotal').innerText = playerTotal;
 
     document.getElementById('results').innerText = message;
-
 }
 
 function stand() {
@@ -215,6 +232,9 @@ function stand() {
         dealerAce += checkForAce(card);
         document.getElementById('dealer-hand').appendChild(cardImage);
         hitSound.play();
+        console.log(card);
+        console.log(dealerTotal);
+        console.log("cards in deck: " + deck.length);
     }
 
     gameResult();
@@ -232,6 +252,7 @@ function doubleDown() {
     stand();
 
     wager /= 2;
+    console.log("cards in deck: " + deck.length);
 }
 
 function reduceAce(total, ace) {
@@ -347,7 +368,6 @@ function endGame() {
 }
 
 function gameRestart() {
-
     document.getElementById("playAgain").style.display = "none";
     document.getElementById("reset").style.display = "none";
     document.getElementById("quit").style.display = "none";
@@ -370,7 +390,15 @@ function gameRestart() {
         }
     }
 
+    checkDeck();
     checkWager();
+}
+
+function checkDeck() {
+    if (deck.length <= 10) {
+        buildDeck();
+        shuffleDeck();
+    }
 }
 
 function changeWager() {

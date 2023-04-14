@@ -12,13 +12,19 @@ public class Player {
     private int balance;
     private int betAmount;
 
-    public Player(String name, int balance) {
-        this.name = name;
+    public Player(String playerId, int balance) {
+        this.playerId = playerId;
         this.hand = new ArrayList<>();
         this.totalPoints = 0;
         this.standing = false;
         this.balance = balance;
         this.betAmount = 0;
+    }
+
+    public Player(String playerId) {
+        this.playerId = playerId;
+        this.balance = balance;
+        this.name = name;
     }
 
 

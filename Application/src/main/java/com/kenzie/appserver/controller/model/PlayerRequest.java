@@ -9,7 +9,7 @@ public class PlayerRequest {
 
     @NotEmpty
     @JsonProperty("playerId")
-    private Optional<String> playerId;
+    private String playerId;
 
     @NotEmpty
     @JsonProperty("name")
@@ -22,11 +22,11 @@ public class PlayerRequest {
     public PlayerRequest() {
     }
 
-    public Optional<String> getPlayerId() {
+    public String getPlayerId() {
         return playerId;
     }
 
-    public void setPlayerId(Optional<String> playerId) {
+    public void setPlayerId(String playerId) {
         this.playerId = playerId;
     }
 

@@ -25,13 +25,6 @@ public class ScoreService {
         return Optional.ofNullable(scoreRepository.findById(String.valueOf(id)));
     }
 
-    public Score saveScore(Score score) {
-        return scoreRepository.save(score);
-    }
-
-    public void deleteScore(Score score) {
-        scoreRepository.delete(score.toString());
-    }
 
     public void addScore(Score score) {
         scoreRepository.save(score);

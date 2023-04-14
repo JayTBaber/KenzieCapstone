@@ -25,14 +25,19 @@ public class GameData {
     public String getGameId() {
         return gameId;
     }
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
+    }
 
     public String getPlayerId() {
         return playerId;
     }
 
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
     }
+
+
 
     public int getScore() {
         return score;

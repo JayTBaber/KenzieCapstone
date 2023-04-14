@@ -64,4 +64,21 @@ public class User {
     public void setLosses(int losses) {
         this.losses = losses;
     }
+
+    public int userWinLossRatio(User user) {
+        int wins = this.wins;
+        int losses = this.losses;
+
+        for (int i = 0; i < user.wins; i++) {
+            wins++;
+        }
+        for (int j = 0; j < user.losses; j++) {
+            losses++;
+        }
+
+        int winLossRatio = this.wins / this.losses;
+
+        return winLossRatio;
+    }
 }
+

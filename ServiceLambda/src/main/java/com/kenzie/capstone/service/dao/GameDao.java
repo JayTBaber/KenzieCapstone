@@ -3,6 +3,7 @@ package com.kenzie.capstone.service.dao;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException;
 import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import com.google.common.collect.ImmutableMap;
@@ -15,6 +16,8 @@ import java.util.List;
 
 public class GameDao {
     private DynamoDBMapper mapper;
+    private GameRecord gameRecord;
+
 
     /**
      * Allows access to and manipulation of Match objects from the data store.
@@ -25,18 +28,25 @@ public class GameDao {
     }
 
     public GameData storeGameData(GameData gameData) {
+        gameRecord = new GameRecord();
+        gameRecord.setGameId(gameData.getGameId());
+
+        DynamoDBSaveExpression saveExpression = new DynamoDBSaveExpression();
+        saveExpression.setExpected(ImmutableMap.of(
+                "gameId", new ExpectedAttributeValue(
+                        new AttributeValue().withS(gameData.getGameId())
+                ).withExists(false)
+        ));
+
         try {
-            mapper.save(gameData, new DynamoDBSaveExpression()
-                    .withExpected(ImmutableMap.of(
-                            "gameId",
-                            new ExpectedAttributeValue().withExists(false)
-                    )));
+            mapper.save(gameRecord, saveExpression);
         } catch (ConditionalCheckFailedException e) {
-            throw new IllegalArgumentException("gameId has already been used");
+            throw new IllegalArgumentException("gameId already exists");
         }
 
         return gameData;
     }
+
 
     public List<GameRecord> getGameData(String id) {
         GameRecord gameRecord = new GameRecord();

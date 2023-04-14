@@ -13,9 +13,9 @@ public class Game {
     private int score;
     private LocalDateTime timestamp;
 
-    public Game(String gameId, List<Player> players) {
+    public Game(String gameId, String playerId) {
         this.gameId = gameId;
-        this.players = players;
+        this.playerId = playerId;
         this.dealer = new Dealer();
         this.deck = new Deck();
         this.gameOver = false;

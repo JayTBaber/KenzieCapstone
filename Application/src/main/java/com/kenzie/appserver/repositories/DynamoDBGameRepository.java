@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository
 public class DynamoDBGameRepository implements GameRepository {
 
@@ -20,9 +21,9 @@ public class DynamoDBGameRepository implements GameRepository {
 
     private final GameService gameService;
 
-    public DynamoDBGameRepository(DynamoDBMapper mapper) {
+    public DynamoDBGameRepository(DynamoDBMapper mapper, GameService gameService) {
         this.mapper = mapper;
-        this.gameService = new GameService(this);
+        this.gameService = gameService;
     }
 
     @Override
@@ -48,6 +49,7 @@ public class DynamoDBGameRepository implements GameRepository {
         }
         return scanResult.get(0);
     }
+
     @Override
     public void delete(String id) {
         Optional<Game> game = gameService.getGameById(Long.parseLong(id));
@@ -59,4 +61,3 @@ public class DynamoDBGameRepository implements GameRepository {
         return gameService.getAllGames();
     }
 }
-

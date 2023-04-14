@@ -28,7 +28,9 @@ public class UserController {
     private PlayerResponse playerResponse;
     private UserRecord userRecord;
 
-    public UserController(UserService userService) {this.userService = userService;}
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
 
     @GetMapping("/users/{username}")
@@ -64,12 +66,13 @@ public class UserController {
 
 
     @PutMapping
-    public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest){
+    public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest) {
 
         User user = userService.getUserByUserName(updateUserRequest.getUsername());
         User updatedUser = new User(user.getUserName(), user.getPassword(), user.getPurse() + updateUserRequest.getPurse(), user.getWins() + updateUserRequest.getWins(), user.getLosses() + updateUserRequest.getLosses());
 
         userService.updateExistingUser(updatedUser);
+
 
         UserResponse userResponse = new UserResponse();
         userResponse.setUsername(updatedUser.getUserName());

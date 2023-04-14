@@ -1,196 +1,344 @@
 package com.kenzie.appserver.service;
 
-import static java.util.UUID.randomUUID;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
-import com.kenzie.appserver.config.DynamoDbConfig;
+import com.kenzie.appserver.controller.model.GameResponse;
+import com.kenzie.appserver.controller.model.PlayerResponse;
+import com.kenzie.appserver.dao.CardDAO;
+import com.kenzie.appserver.enums.Rank;
+import com.kenzie.appserver.enums.Suit;
+import com.kenzie.appserver.repositories.GameRepository;
 import com.kenzie.appserver.repositories.PlayerRepository;
-import com.kenzie.appserver.repositories.model.PlayerRecord;
-import com.kenzie.appserver.service.model.Game;
-import com.kenzie.appserver.service.model.Player;
-import com.kenzie.appserver.service.model.Score;
+import com.kenzie.appserver.repositories.ScoreRepository;
+import com.kenzie.appserver.repositories.UserRepository;
+import com.kenzie.appserver.repositories.model.UserRecord;
+import com.kenzie.appserver.service.model.*;
+import com.kenzie.capstone.service.client.LambdaServiceClient;
+import com.kenzie.capstone.service.model.GameData;
+import com.kenzie.capstone.service.model.PlayerData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.kenzie.appserver.dao.GameDAO;
-import com.kenzie.appserver.dao.PlayerDAO;
-import com.kenzie.appserver.dao.ScoreDAO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-
-
-
 public class ServiceTests {
-
+    @Mock
+    private GameRepository gameRepository;
     @Mock
     private PlayerRepository playerRepository;
-
-    @Autowired
-    private DynamoDBMapper dynamoDBMapper;
-
-    @Value("${dynamodb.Players}")
-    private String tableName;
-
     @Mock
-    private GameDAO gameDao;
-
+    private UserRepository userRepository;
     @Mock
-    private PlayerDAO playerDao;
-
-    @Mock
-    private ScoreDAO scoreDao;
-
-    @InjectMocks
-    private GameService gameService;
-
-    @InjectMocks
-    private PlayerService playerService;
-
+    private ScoreRepository scoreRepository;
     @InjectMocks
     private ScoreService scoreService;
-
+    @Mock
+    private LambdaServiceClient lambdaServiceClient;
+    @Mock
+    private CardDAO cardDAO;
+    @InjectMocks
+    private CardService cardService;
+    @InjectMocks
+    private UserService userService;
+    @InjectMocks
+    private GameService gameService;
+    @InjectMocks
+    private PlayerService playerService;
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
+
+    }
+    @Test
+    public void testStartNewGame() {
+        String userId = "1234";
+        GameData gameData = new GameData();
+        gameData.setGameId("1234");
+        gameData.setPlayerId(UUID.randomUUID().toString());
+
+        when(lambdaServiceClient.setGameData(userId)).thenReturn(gameData);
+
+        GameResponse gameResponse = gameService.startNewGame(userId);
+
+        Assertions.assertNotNull(gameResponse);
+        assertEquals("1234", gameResponse.getGameId());
+
+        verify(gameRepository, times(1)).save(any(Game.class));
     }
 
     @Test
-    void addNewPlayer() {
-        // GIVEN
-        String playerid = randomUUID().toString();
+    public void testCreateNewPlayer() {
+        String userId = "Josh";
+        PlayerData playerData = new PlayerData();
+        playerData.setName("Josh");
+        playerData.setPlayerId(UUID.randomUUID().toString());
 
-        Player player = new Player(playerid, 100);
+        when(lambdaServiceClient.setPlayerData(userId)).thenReturn(playerData);
 
-        ArgumentCaptor<PlayerRecord> playerRecordCaptor = ArgumentCaptor.forClass(PlayerRecord.class);
+        PlayerResponse playerResponse = playerService.createNewPlayer(userId);
 
-        // WHEN
-        Player returnedPlayer = playerService.createPlayer(player);
+        Assertions.assertNotNull(playerResponse);
+        assertEquals("Josh", playerResponse.getName());
 
-        // THEN
-        Assertions.assertNotNull(returnedPlayer);
-
-        verify(playerRepository).save(playerRecordCaptor.capture());
-
-        PlayerRecord record = playerRecordCaptor.getValue();
-
-        Assertions.assertNotNull(record, "The player record is returned");
-        assertEquals(record.getPlayerId(), player.getPlayerId(), "The player id matches");
-        assertEquals(record.getName(), player.getName(), "The player name matches");
+        verify(playerRepository, times(1)).save(any(Player.class));
     }
 
-//    // Tests for GameService
-//
-//    @Test
-//    public void testGetGameById() {
-//        Game expectedGame = new Game(1, "Chess");
-//        when(gameDao.getGameById(1)).thenReturn(expectedGame);
-//        Game actualGame = gameService.getGameById(1);
-//        assertEquals(expectedGame, actualGame);
-//    }
-//
-//    @Test
-//    public void testGetAllGames() {
-//        List<Game> expectedGames = new ArrayList<>();
-//        expectedGames.add(new Game(1, "Chess"));
-//        expectedGames.add(new Game(2, "Checkers"));
-//        when(gameDao.getAllGames()).thenReturn(expectedGames);
-//        List<Game> actualGames = gameService.getAllGames();
-//        assertEquals(expectedGames, actualGames);
-//    }
-//
-//    @Test
-//    public void testAddGame() {
-//        Game gameToAdd = new Game(1, "Chess");
-//        gameService.addGame(gameToAdd);
-//        verify(gameDao, times(1)).addGame(gameToAdd);
-//    }
-//
-//    // Tests for PlayerService
-//
-//    @Test
-//    public void testGetPlayerById() {
-//        Player expectedPlayer = new Player(1, "John");
-//        when(playerDao.getPlayerById(1)).thenReturn(expectedPlayer);
-//        Player actualPlayer = playerService.getPlayerById(1);
-//        assertEquals(expectedPlayer, actualPlayer);
-//    }
-//
-//    @Test
-//    public void testGetAllPlayers() {
-//        List<Player> expectedPlayers = new ArrayList<>();
-//        expectedPlayers.add(new Player(1, "John"));
-//        expectedPlayers.add(new Player(2, "Jane"));
-//        when(playerDao.getAllPlayers()).thenReturn(expectedPlayers);
-//        List<Player> actualPlayers = playerService.getAllPlayers();
-//        assertEquals(expectedPlayers, actualPlayers);
-//    }
-//
-//    @Test
-//    public void testAddPlayer() {
-//        Player playerToAdd = new Player(1, "John");
-//        playerService.addPlayer(playerToAdd);
-//        verify(playerDao, times(1)).addPlayer(playerToAdd);
-//    }
-//
-//    // Tests for ScoreService
-//
-//    @Test
-//    public void testGetScoreById() {
-//        Score expectedScore = new Score(1, 1, 1, 10);
-//        when(scoreDao.getScoreById(1)).thenReturn(expectedScore);
-//        Score actualScore = scoreService.getScoreById(1);
-//        assertEquals(expectedScore, actualScore);
-//    }
-//
-//    @Test
-//    public void testGetScoresForPlayer() {
-//        List<Score> expectedScores = new ArrayList<>();
-//        expectedScores.add(new Score(1, 1, 1, 10));
-//        expectedScores.add(new Score(2, 1, 2, 20));
-//        when(scoreDao.getScoresForPlayer(1)).thenReturn(expectedScores);
-//        List<Score> actualScores = scoreService.getScoresForPlayer(1);
-//        assertEquals(expectedScores, actualScores);
-//    }
-//
-//    @Test
-//    public void testGetScoresForGame() {
-//        List<Score> expectedScores = new ArrayList<>();
-//        expectedScores.add(new Score(1, 1, 1, 10));
-//        expectedScores.add(new Score(2, 2, 1, 15));
-//        when(scoreDao.getScoresForGame(1)).thenReturn(expectedScores);
-//        List<Score> actualScores = scoreService.getScoresForGame(1);
-//        assertEquals(expectedScores, actualScores);
-//    }
-//
-//    @Test
-//    public void testAddScore() {
-//        Score scoreToAdd = new Score(1, 1, 1, 10);
-//        scoreService.addScore(scoreToAdd);
-//        verify(scoreDao, times(1)).addScore(scoreToAdd);
-//    }
-//
-//    @Test
-//    public void testGetTopScoresForGame() {
-//        List<Score> expectedScores = new ArrayList<>();
-//        expectedScores.add(new Score(1, 1, 1, 10));
-//        expectedScores.add(new Score(2, 2, 1, 15));
-//        when(scoreDao.getTopScoresForGame(1)).thenReturn(expectedScores);
-//        List<Score> actualScores = scoreService.getTopScoresForGame(1);
-//        assertEquals(expectedScores, actualScores);
-//    }
+    @Test
+    public void testFindAllGames() {
+        GameData game1 = new GameData();
+        game1.setGameId("1234");
+        game1.setPlayerId(UUID.randomUUID().toString());
+
+        GameData game2 = new GameData();
+        game2.setGameId("5678");
+        game2.setPlayerId(UUID.randomUUID().toString());
+
+        List<Game> games = new ArrayList<>();
+        games.add(new Game(game1.getGameId()));
+        games.add(new Game(game2.getGameId()));
+        when(gameRepository.findAll()).thenReturn(games);
+
+        List<GameResponse> gameResponses = gameService.findAllGames();
+
+        Assertions.assertNotNull(gameResponses);
+        assertEquals(2, gameResponses.size());
+        assertEquals("1234", gameResponses.get(0).getGameId());
+        assertEquals("5678", gameResponses.get(1).getGameId());
+    }
+
+    @Test
+    public void testFindAllPlayers() {
+        List<Player> players = new ArrayList<>();
+        players.add(new Player("Josh", 500));
+        players.add(new Player("Alice", 100));
+
+        when(playerRepository.findAll()).thenReturn(players);
+
+        List<PlayerResponse> playerResponses = playerService.findAllPlayers();
+
+        assertEquals(2, playerResponses.size());
+        assertEquals("Josh", playerResponses.get(0).getPlayerId());
+        assertEquals(500, playerResponses.get(0).getBalance());
+        assertEquals("Alice", playerResponses.get(1).getPlayerId());
+        assertEquals(100, playerResponses.get(1).getBalance());
+    }
+
+
+    @Test
+    public void testDeleteGameById() {
+        String gameId = "1234";
+        GameData game = new GameData();
+        game.setGameId(gameId);
+        game.setPlayerId(UUID.randomUUID().toString());
+
+        gameService.deleteGame(game);
+
+        verify(gameRepository, times(1)).delete(String.valueOf(game));
+    }
+
+    @Test
+    public void testDeletePlayerById() {
+        String playerId = UUID.randomUUID().toString();
+        PlayerData player = new PlayerData();
+        player.setPlayerId(playerId);
+        player.setName("John");
+
+        playerService.deletePlayer(player);
+
+        verify(playerRepository, times(1)).delete(String.valueOf(player));
+    }
+
+    @Test
+    public void testGetAllCards() {
+        List<Card> cards = new ArrayList<>();
+        Card card1 = new Card(Suit.HEARTS, Rank.ACE);
+        Card card2 = new Card(Suit.CLUBS, Rank.KING);
+        cards.add(card1);
+        cards.add(card2);
+        when(cardDAO.findAll()).thenReturn(cards);
+
+        List<Card> actualCards = cardService.getAllCards();
+
+        assertEquals(cards.size(), actualCards.size());
+        Assertions.assertTrue(actualCards.contains(card1));
+        Assertions.assertTrue(actualCards.contains(card2));
+    }
+    @Test
+    public void testSaveCard() {
+        Card card = new Card(Suit.SPADES, Rank.QUEEN);
+        when(cardDAO.save(card)).thenReturn(card);
+
+        Card actualCard = cardService.saveCard(card);
+
+        assertEquals(card, actualCard);
+    }
+    @Test
+    public void testDeleteCard() {
+        Card card = new Card(Suit.DIAMONDS, Rank.TEN);
+
+        cardService.deleteCard(card);
+
+        verify(cardDAO).delete(card);
+    }
+    @Test
+    public void testGetCardById() throws EntityNotFoundException {
+        Card card = new Card(Suit.HEARTS, Rank.ACE);
+        when(cardDAO.findById(1L)).thenReturn(card);
+
+        Card result = cardService.getCardById(1L);
+
+        assertEquals(card, result);
+    }
+
+
+    @Test
+    public void testUpdateNonExistingUser() {
+        User user = new User("nonExistingUser", "password", 500, 7, 4);
+
+        when(userRepository.existsById("nonExistingUser")).thenReturn(false);
+
+        User result = userService.updateExistingUser(user);
+
+        assertNull(result);
+
+        verify(userRepository, never()).save(any(UserRecord.class));
+    }
+
+    @Test
+    void testEntityNotFoundException() {
+        String message = null;
+        EntityNotFoundException exception = new EntityNotFoundException(message);
+
+        assertEquals(null, exception.getMessage());
+    }
+
+    @Test
+    public void testGetAllScores() {
+        Score score1 = new Score(1, 100);
+        Score score2 = new Score(2, 200);
+        List<Score> scores = Arrays.asList(score1, score2);
+
+        when(scoreRepository.findAll()).thenReturn(scores);
+
+        List<Score> result = scoreService.getAllScores();
+
+        assertEquals(scores, result);
+
+        verify(scoreRepository).findAll();
+    }
+
+    @Test
+    public void testGetScoreById() {
+        Score score = new Score(1, 100);
+
+        when(scoreRepository.findById("1")).thenReturn(score);
+
+        Optional<Score> result = scoreService.getScoreById(1);
+
+        assertEquals(Optional.of(score), result);
+
+        verify(scoreRepository).findById("1");
+    }
+
+    @Test
+    public void testUpdateScoreById() {
+        long id = 1;
+        Score score = new Score(1, 150);
+
+        Optional<Score> scoreOptional = Optional.of(score);
+
+        when(scoreRepository.findById(String.valueOf(id))).thenReturn(scoreOptional.get());
+        when(scoreRepository.save(any(Score.class))).thenReturn(score);
+
+        scoreService.updateScoreById(id, score);
+
+        verify(scoreRepository, times(1)).findById(String.valueOf(id));
+        verify(scoreRepository, times(1)).save(any(Score.class));
+    }
+
+    @Test
+    public void testAddScore() {
+        Score score = new Score(1, 100);
+
+        scoreService.addScore(score);
+
+        verify(scoreRepository).save(score);
+    }
+
+    @Test
+    public void testDeleteScoreById() {
+        long id = 1;
+
+        doNothing().when(scoreRepository).deleteById(id);
+
+        scoreService.deleteScoreById(id);
+
+        verify(scoreRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    public void getUserByUserName_shouldReturnNull_whenUserDoesNotExist() {
+        String username = "johndoe";
+        when(userRepository.findById(username)).thenReturn(Optional.empty());
+
+        User result = userService.getUserByUserName(username);
+
+        assertNull(result);
+    }
+
+    @Test
+    public void updateExistingUser_shouldReturnNull_whenUserDoesNotExist() {
+        String username = "johndoe";
+        User user = new User(username, "newpassword", 200, 20, 10);
+        when(userRepository.existsById(username)).thenReturn(false);
+
+        User result = userService.updateExistingUser(user);
+
+        assertNull(result);
+        verify(userRepository, never()).save(any(UserRecord.class));
+    }
+
+    @Test
+    public void testAddNewUser() {
+        String username = "testUser";
+        User user = new User(username, "password", 100, 0, 0);
+
+        User newUser = userService.addNewUser(user);
+
+        Assertions.assertNotNull(newUser);
+        assertEquals(newUser.getUserName(), username);
+        assertEquals(newUser.getPassword(), "password");
+        assertEquals(newUser.getPurse(), 100);
+        assertEquals(newUser.getWins(), 0);
+        assertEquals(newUser.getLosses(), 0);
+    }
+
+    @Test
+    public void testAddExistingUser() {
+        String username = "testUser";
+        UserRecord userRecord = new UserRecord();
+        userRecord.setUsername(username);
+        userRecord.setPassword("password");
+        userRecord.setPurse(100);
+        userRecord.setWins(0);
+        userRecord.setLosses(0);
+        userRepository.save(userRecord);
+
+        User user = new User(username, "password", 100, 0, 0);
+
+        User newUser = userService.addNewUser(user);
+
+        Assertions.assertNull(null);
+    }
+
+
 }
